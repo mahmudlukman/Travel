@@ -51,11 +51,60 @@ export const getTravelsByCreator = tryCatch(
 export const deleteTravel = tryCatch(
   async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
-    const travel = await TravelModel.findById(id)
+    const travel = await TravelModel.findById(id);
     if (!travel) {
       return next(new ErrorHandler('Travel not found', 404));
     }
-    await travel.deleteOne({id})
-    res.status(200).json({ success: true, message: "Travel deleted successfully" });
+    await travel.deleteOne({ id });
+    res
+      .status(200)
+      .json({ success: true, message: 'Travel deleted successfully' });
+  }
+);
+
+export const updateTravel = tryCatch(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const data = req.body;
+    const image = data.image;
+    const travelId = req.params.id;
+    const travelData = await TravelModel.findById(travelId);
+
+    if (!travelData) {
+      return next(new ErrorHandler('Travel not found', 400));
+    }
+    if (image && typeof image === 'string' && !image.startsWith('https')) {
+      if (travelData.image && travelData.image.public_id) {
+        await cloudinary.v2.uploader.destroy(travelData.image.public_id);
+      }
+      const myCloud = await cloudinary.v2.uploader.upload(image, {
+        folder: 'travel',
+      });
+      data.image = {
+        public_id: myCloud.public_id,
+        url: myCloud.secure_url,
+      };
+    } else if (
+      image &&
+      typeof image === 'string' &&
+      image.startsWith('https')
+    ) {
+      // Keep existing image
+      data.image = {
+        public_id: travelData.image?.public_id || '',
+        url: travelData.image?.url || '',
+      };
+    }
+
+    const updatedTravel = await TravelModel.findByIdAndUpdate(
+      travelId,
+      { $set: data },
+      { new: true }
+    );
+
+    if (!updatedTravel) {
+      return next(new Error('Failed to update travel'));
+    }
+
+    res.status(200).json({ success: true, data: updatedTravel });
   }
 );
