@@ -102,9 +102,46 @@ export const updateTravel = tryCatch(
     );
 
     if (!updatedTravel) {
-      return next(new Error('Failed to update travel'));
+      return next(new ErrorHandler('Failed to update travel', 400));
     }
 
     res.status(200).json({ success: true, data: updatedTravel });
   }
 );
+
+export const likeTravel = tryCatch(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = req.params;
+
+    if (!req.user) {
+      return next(new ErrorHandler('Unauthenticated', 400));
+    }
+
+    const travel = await TravelModel.findById(id);
+
+    if (!travel) {
+      return next(new ErrorHandler('Travel not found', 404));
+    }
+
+    const index = travel.likes.findIndex((userId) => userId === req.user._id.toString());
+
+    if (index === -1) {
+      travel.likes.push(req.user._id);
+    } else {
+      travel.likes = travel.likes.filter((userId) => userId !== req.user._id.toString());
+    }
+
+    const updatedTravel = await TravelModel.findByIdAndUpdate(
+      id,
+      { likes: travel.likes },
+      { new: true }
+    );
+
+    if (!updatedTravel) {
+      return next(new ErrorHandler('Failed to update travel', 500));
+    }
+
+    res.status(200).json({ success: true, data: updatedTravel });
+  }
+);
+

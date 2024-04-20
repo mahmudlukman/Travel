@@ -5,6 +5,7 @@ import {
   getAllTravels,
   getTravel,
   getTravelsByCreator,
+  likeTravel,
   updateTravel,
 } from '../controllers/travel';
 import { isAuthenticated } from '../middleware/auth';
@@ -17,5 +18,6 @@ travelRouter.get('/:id', isAuthenticated, getTravel);
 travelRouter.get('/creator', isAuthenticated, getTravelsByCreator);
 travelRouter.put('/:id', isAuthenticated, updateTravel);
 travelRouter.delete('/:id', isAuthenticated, deleteTravel);
+travelRouter.put('/:id/like', isAuthenticated, likeTravel);
 
 export default travelRouter;
