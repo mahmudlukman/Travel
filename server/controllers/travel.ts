@@ -30,3 +30,11 @@ export const getAllTravels = tryCatch(
     res.status(200).json({ success: true, data: travels });
   }
 );
+
+export const getTravel = tryCatch(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const travelId = req.params.id;
+    const travel = await TravelModel.findById(travelId);
+    res.status(200).json({ success: true, data: travel });
+  }
+);
