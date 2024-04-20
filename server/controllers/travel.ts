@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import tryCatch from './utils/tryCatch';
 import cloudinary from 'cloudinary';
 import TravelModel from '../models/Travel';
+import ErrorHandler from '../utils/errorHandler';
 
 export const createTravel = tryCatch(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -44,5 +45,17 @@ export const getTravelsByCreator = tryCatch(
     const name = req.query;
     const travels = await TravelModel.find(name);
     res.status(200).json({ success: true, data: travels });
+  }
+);
+
+export const deleteTravel = tryCatch(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = req.params;
+    const travel = await TravelModel.findById(id)
+    if (!travel) {
+      return next(new ErrorHandler('Travel not found', 404));
+    }
+    await travel.deleteOne({id})
+    res.status(200).json({ success: true, message: "Travel deleted successfully" });
   }
 );
