@@ -38,3 +38,11 @@ export const getTravel = tryCatch(
     res.status(200).json({ success: true, data: travel });
   }
 );
+
+export const getTravelsByCreator = tryCatch(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const name = req.query;
+    const travels = await TravelModel.find(name);
+    res.status(200).json({ success: true, data: travels });
+  }
+);
