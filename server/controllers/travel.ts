@@ -6,17 +6,27 @@ import TravelModel from '../models/Travel';
 export const createTravel = tryCatch(
   async (req: Request, res: Response, next: NextFunction) => {
     const data = req.body;
-    const thumbnail = data.selectedFile;
-    if (thumbnail) {
-      const myCloud = await cloudinary.v2.uploader.upload(thumbnail, {
+    const image = data.image;
+    if (image) {
+      const myCloud = await cloudinary.v2.uploader.upload(image, {
         folder: 'travel',
       });
-      data.thumbnail = {
+      data.image = {
         public_id: myCloud.public_id,
         url: myCloud.secure_url,
       };
     }
-    const travel = await TravelModel.create({ ...data, creator: req.user?.name });
+    const travel = await TravelModel.create({
+      ...data,
+      creator: req.user?.name,
+    });
     res.status(201).json({ success: true, travel });
+  }
+);
+
+export const getAllTravels = tryCatch(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const travels = await TravelModel.find();
+    res.status(200).json({ success: true, data: travels });
   }
 );

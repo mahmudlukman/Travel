@@ -6,7 +6,7 @@ export interface ITravel extends Document {
   name: string;
   creator: string;
   tags: string[];
-  selectedFile: {
+  image: {
     public_id: string;
     url: string;
   };
@@ -21,7 +21,7 @@ const TravelSchema: Schema<ITravel> = new mongoose.Schema(
     name: String,
     creator: String,
     tags: [String],
-    selectedFile: {
+    image: {
       public_id: String,
       url: String,
     },
