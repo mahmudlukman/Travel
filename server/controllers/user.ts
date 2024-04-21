@@ -47,3 +47,14 @@ export const login = tryCatch(
     sendToken(user, 200, res);
   }
 );
+export const logout = tryCatch(
+  async (req: Request, res: Response, next: NextFunction) => {
+    res.cookie('access_token', '', {
+      expires: new Date(Date.now()),
+      httpOnly: true,
+      sameSite: 'none',
+      secure: true,
+    });
+    res.status(200).json({ success: true, message: 'Logged out successfully' });
+  }
+);
