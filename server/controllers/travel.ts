@@ -43,26 +43,33 @@ export const getTravel = tryCatch(
   }
 );
 
-export const getTravelsByUser = tryCatch(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const userTravelList = req.user?.travels;
-    const travelId = req.params.id;
+// export const getTravelsByUser = tryCatch(
+//   async (req: Request, res: Response, next: NextFunction) => {
+//     const userTravelList = req.user?.travels;
+//     const travelId = req.params.id;
 
-    const travelExists = userTravelList?.find(
-      (travel: any) => travel._id.toString() === travelId
-    );
+//     const travelExists = userTravelList?.find(
+//       (travel: any) => travel._id.toString() === travelId
+//     );
+
+//     if (!travelExists) {
+//       return next(
+//         new ErrorHandler('You are not eligible to access this course', 404)
+//       );
+//     }
+//     const travel = await TravelModel.findById(travelId)
+//     res.status(200).json({ success: true, data: travel });
+//   }
+// );
+export const getTravelsByCreator = tryCatch(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { name } = req.query.creator as any;
+    const travels = await TravelModel.find({
+      creator: { $regex: new RegExp(name as string, 'i') },
+    });
     res.status(200).json({ success: true, data: travels });
   }
 );
-// export const getTravelsByCreator = tryCatch(
-//   async (req: Request, res: Response, next: NextFunction) => {
-//     const { name } = req.query.creator as any;
-//     const travels = await TravelModel.find({
-//       creator: { $regex: new RegExp(name as string, 'i') },
-//     });
-//     res.status(200).json({ success: true, data: travels });
-//   }
-// );
 
 export const deleteTravel = tryCatch(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -183,34 +190,34 @@ export const likeTravel = tryCatch(
 //   }
 // );
 
-export const commentTravel = tryCatch(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const travelId = req.params.id;
-    const { value } = req.body; // Assuming you have a 'text' field in the comment data
-    const userId = req.user?.id; // Assuming you have a user ID available in req.user
+// export const commentTravel = tryCatch(
+//   async (req: Request, res: Response, next: NextFunction) => {
+//     const travelId = req.params.id;
+//     const { value } = req.body; // Assuming you have a 'text' field in the comment data
+//     const userId = req.user?.id; // Assuming you have a user ID available in req.user
 
-    // Create a new comment object
-    const newComment = {
-      value,
-      user: userId,
-      createdAt: new Date(),
-    };
-    const travel = await TravelModel.findById(travelId);
+//     // Create a new comment object
+//     const newComment = {
+//       value,
+//       user: userId,
+//       createdAt: new Date(),
+//     };
+//     const travel = await TravelModel.findById(travelId);
 
-    // If travel not found
-    if (!travel) {
-      return next(new ErrorHandler('Travel not found', 500));
-    }
+//     // If travel not found
+//     if (!travel) {
+//       return next(new ErrorHandler('Travel not found', 500));
+//     }
 
-    // Push the new comment to the comments array
-    travel.comments.push(newComment);
+//     // Push the new comment to the comments array
+//     travel.comments.push(newComment);
 
-    // Save the updated travel document
-    const updatedTravel = await travel.save();
+//     // Save the updated travel document
+//     const updatedTravel = await travel.save();
 
-    res.status(200).json({ success: true, data: updatedTravel });
-  }
-);
+//     res.status(200).json({ success: true, data: updatedTravel });
+//   }
+// );
 
 // export const commentTravel = tryCatch(
 //   async (req: Request, res: Response, next: NextFunction) => {

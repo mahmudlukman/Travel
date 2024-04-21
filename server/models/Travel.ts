@@ -1,41 +1,32 @@
 import mongoose, { Document, Model, Schema } from 'mongoose';
-import { IUser } from "../models/User";
-
-export interface IComment {
-  user: IUser;
-  comment: string;
-  commentReplies?: IComment[];
-}
-
-const CommentSchema = new Schema<IComment>({
-  user: Object,
-  comment: String,
-  commentReplies: [Object]
-})
 
 export interface ITravel extends Document {
   title: string;
   message: string;
+  name: string;
+  creator: string;
   tags: string[];
   image: {
     public_id: string;
     url: string;
   };
   likes: string[];
-  comments: IComment[];
+  comments: string[];
 }
 
 const TravelSchema: Schema<ITravel> = new mongoose.Schema(
   {
     title: String,
     message: String,
+    name: String,
+    creator: String,
     tags: [String],
     image: {
       public_id: String,
       url: String,
     },
     likes: { type: [String], default: [] },
-    comments: [CommentSchema],
+    comments: { type: [String], default: [] },
   },
   { timestamps: true }
 );
