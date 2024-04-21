@@ -35,18 +35,34 @@ export const getAllTravels = tryCatch(
 export const getTravel = tryCatch(
   async (req: Request, res: Response, next: NextFunction) => {
     const travelId = req.params.id;
-    const travel = await TravelModel.findById(travelId);
+    const travel = (await TravelModel.findById(travelId)) as any;
+    if (!travel || travel.length === 0) {
+      return next(new ErrorHandler('No travel found for ${name}', 404));
+    }
     res.status(200).json({ success: true, data: travel });
   }
 );
 
-export const getTravelsByCreator = tryCatch(
+export const getTravelsByUser = tryCatch(
   async (req: Request, res: Response, next: NextFunction) => {
-    const name = req.query;
-    const travels = await TravelModel.find(name);
+    const userTravelList = req.user?.travels;
+    const travelId = req.params.id;
+
+    const travelExists = userTravelList?.find(
+      (travel: any) => travel._id.toString() === travelId
+    );
     res.status(200).json({ success: true, data: travels });
   }
 );
+// export const getTravelsByCreator = tryCatch(
+//   async (req: Request, res: Response, next: NextFunction) => {
+//     const { name } = req.query.creator as any;
+//     const travels = await TravelModel.find({
+//       creator: { $regex: new RegExp(name as string, 'i') },
+//     });
+//     res.status(200).json({ success: true, data: travels });
+//   }
+// );
 
 export const deleteTravel = tryCatch(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -123,12 +139,16 @@ export const likeTravel = tryCatch(
       return next(new ErrorHandler('Travel not found', 404));
     }
 
-    const index = travel.likes.findIndex((userId) => userId === req.user._id.toString());
+    const index = travel.likes.findIndex(
+      (userId) => userId === req.user._id.toString()
+    );
 
     if (index === -1) {
       travel.likes.push(req.user._id);
     } else {
-      travel.likes = travel.likes.filter((userId) => userId !== req.user._id.toString());
+      travel.likes = travel.likes.filter(
+        (userId) => userId !== req.user._id.toString()
+      );
     }
 
     const updatedTravel = await TravelModel.findByIdAndUpdate(
@@ -144,4 +164,87 @@ export const likeTravel = tryCatch(
     res.status(200).json({ success: true, data: updatedTravel });
   }
 );
+// export const commentTravel = tryCatch(
+//   async (req: Request, res: Response, next: NextFunction) => {
+//     const travelId = req.params.id;
+//     const data = req.body;
 
+//     const travel = (await TravelModel.findById(travelId)) as any;
+
+//     travel?.comments.push(data);
+
+//     const updatedTravel = await TravelModel.findByIdAndUpdate(
+//       travelId,
+//       travel,
+//       { new: true }
+//     );
+
+//     res.status(200).json({ success: true, data: updatedTravel });
+//   }
+// );
+
+export const commentTravel = tryCatch(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const travelId = req.params.id;
+    const { value } = req.body; // Assuming you have a 'text' field in the comment data
+    const userId = req.user?.id; // Assuming you have a user ID available in req.user
+
+    // Create a new comment object
+    const newComment = {
+      value,
+      user: userId,
+      createdAt: new Date(),
+    };
+    const travel = await TravelModel.findById(travelId);
+
+    // If travel not found
+    if (!travel) {
+      return next(new ErrorHandler('Travel not found', 500));
+    }
+
+    // Push the new comment to the comments array
+    travel.comments.push(newComment);
+
+    // Save the updated travel document
+    const updatedTravel = await travel.save();
+
+    res.status(200).json({ success: true, data: updatedTravel });
+  }
+);
+
+// export const commentTravel = tryCatch(
+//   async (req: Request, res: Response, next: NextFunction) => {
+//     const travelId = req.params.id;
+//     const { value } = req.body; // Assuming you have a 'text' field in the comment data
+//     const userId = req.user?.id; // Assuming you have a user ID available in req.user
+
+//     // Create a new comment object
+//     const newComment = {
+//       value,
+//       user: userId,
+//       createdAt: new Date(),
+//     };
+
+//     try {
+//       const travel = await TravelModel.findById(travelId);
+
+//       // If travel not found
+//       if (!travel) {
+//         return res.status(404).json({
+//           success: false,
+//           message: 'Travel not found',
+//         });
+//       }
+
+//       // Push the new comment to the comments array
+//       travel.comments.push(newComment);
+
+//       // Save the updated travel document
+//       const updatedTravel = await travel.save();
+
+//       res.status(200).json({ success: true, data: updatedTravel });
+//     } catch (error) {
+//       next(error); // Pass the error to the next middleware (error handling middleware)
+//     }
+//   }
+// );

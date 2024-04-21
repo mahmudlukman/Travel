@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import {
+  commentTravel,
   createTravel,
   deleteTravel,
   getAllTravels,
@@ -15,9 +16,10 @@ const travelRouter = Router();
 travelRouter.post('/create', isAuthenticated, createTravel);
 travelRouter.get('/', isAuthenticated, getAllTravels);
 travelRouter.get('/:id', isAuthenticated, getTravel);
-travelRouter.get('/', isAuthenticated, getTravelsByCreator);
+travelRouter.get('/creator', isAuthenticated, getTravelsByCreator);
 travelRouter.put('/:id', isAuthenticated, updateTravel);
 travelRouter.delete('/:id', isAuthenticated, deleteTravel);
 travelRouter.put('/:id/like', isAuthenticated, likeTravel);
+travelRouter.post('/:id/comment-travel', isAuthenticated, commentTravel);
 
 export default travelRouter;
