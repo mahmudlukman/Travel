@@ -58,3 +58,12 @@ export const logout = tryCatch(
     res.status(200).json({ success: true, message: 'Logged out successfully' });
   }
 );
+
+// get user info
+export const getUserInfo = tryCatch(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const userId = req.user?._id;
+    const user = await UserModel.findById(userId);
+    res.status(200).json({ success: true, data: user });
+  }
+);
