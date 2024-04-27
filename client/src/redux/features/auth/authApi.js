@@ -16,6 +16,7 @@ export const authApi = apiSlice.injectEndpoints({
           dispatch(
             userRegistration({
               token: result.data.activationToken,
+              user: result.data.user,
             })
           );
         } catch (error) {
@@ -47,7 +48,7 @@ export const authApi = apiSlice.injectEndpoints({
         }
       },
     }),
-    logOut: builder.query({
+    logout: builder.query({
       query: () => ({
         url: 'logout',
         method: 'GET',
@@ -64,5 +65,5 @@ export const authApi = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useLogOutQuery, useLoginMutation, useRegisterMutation } =
+export const { useLogoutQuery, useLoginMutation, useRegisterMutation } =
   authApi;

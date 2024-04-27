@@ -8,7 +8,8 @@ import {
   useTheme,
   Box,
 } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useLogoutQuery } from '../../redux/features/auth/authApi';
 
 import travelsLogo from '../../assets/travelsLogo.png';
 import memoriesText from '../../assets/memoriesText.png';
@@ -16,6 +17,14 @@ import memoriesText from '../../assets/memoriesText.png';
 const Navbar = () => {
   const theme = useTheme();
   const { user } = useSelector((state) => state.auth);
+  // const { logout } = useLogoutQuery();
+  // const { logout } = useLogoutQuery({}, { refetchOnMountOrArgChange: true });
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await logout();
+    navigate('/auth');
+  };
 
   return (
     <AppBar
@@ -64,7 +73,7 @@ const Navbar = () => {
             sx={{
               display: 'flex',
               justifyContent: 'space-between',
-              width: '400px',
+              width: '300px',
               alignItems: 'center',
               [theme.breakpoints.down('sm')]: {
                 width: 'auto',
@@ -97,6 +106,7 @@ const Navbar = () => {
               variant="contained"
               sx={{ marginLeft: '20px' }}
               color="secondary"
+              onClick={handleLogout}
             >
               Logout
             </Button>

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
 import {
   Avatar,
   Button,
@@ -7,7 +6,6 @@ import {
   Grid,
   Typography,
   Container,
-  CircularProgress,
   useTheme,
 } from '@mui/material';
 import { LockOutlined } from '@mui/icons-material';
