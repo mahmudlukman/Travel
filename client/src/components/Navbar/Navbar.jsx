@@ -6,16 +6,16 @@ import {
   Avatar,
   Button,
   useTheme,
+  Box,
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 import travelsLogo from '../../assets/travelsLogo.png';
-import travelsText from '../../assets/travelsText.png';
+import memoriesText from '../../assets/memoriesText.png';
 
 const Navbar = () => {
   const theme = useTheme();
   const { user } = useSelector((state) => state.auth);
-  console.log(user)
 
   return (
     <AppBar
@@ -38,13 +38,13 @@ const Navbar = () => {
         <img
           component={Link}
           to="/"
-          src={travelsText}
+          src={travelsLogo}
           alt="icon"
           height="45px"
         />
         <img
           style={{ marginLeft: '10px', marginTop: '5px' }}
-          src={travelsLogo}
+          src={memoriesText}
           alt="icon"
           height="40px"
         />
@@ -60,7 +60,7 @@ const Navbar = () => {
         }}
       >
         {user ? (
-          <div
+          <Box
             sx={{
               display: 'flex',
               justifyContent: 'space-between',
@@ -75,8 +75,8 @@ const Navbar = () => {
           >
             <Avatar
               sx={{
-                color: 'grey',
-                backgroundColor: 'grey',
+                color: 'blue',
+                backgroundColor: 'lightGrey',
               }}
               alt={user?.name}
               src={user?.avatar?.url}
@@ -100,7 +100,7 @@ const Navbar = () => {
             >
               Logout
             </Button>
-          </div>
+          </Box>
         ) : (
           <Button
             component={Link}

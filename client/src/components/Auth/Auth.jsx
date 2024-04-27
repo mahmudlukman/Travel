@@ -12,11 +12,9 @@ import {
 } from '@mui/material';
 import { LockOutlined } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-import { useLoginMutation } from '../../redux/features/auth/authApi';
-import { useRegisterMutation } from '../../redux/features/auth/authApi';
+import { useLoginMutation, useRegisterMutation } from '../../redux/features/auth/authApi';
 import { toast } from 'react-hot-toast';
 
-import Icon from './icon';
 import Input from './Input';
 
 const initialState = {
@@ -31,11 +29,9 @@ const SignUp = () => {
   const theme = useTheme();
   const [form, setForm] = useState(initialState);
   const [isSignup, setIsSignup] = useState(false);
-
   const [showPassword, setShowPassword] = useState(false);
-  const handleShowPassword = () => setShowPassword(!showPassword);
-  const [login, { isSuccess, data, isLoading, error }] = useLoginMutation();
-  const [register] = useRegisterMutation();
+  const [login, { isSuccess: loginSuccess, error: loginError }] = useLoginMutation();
+  const [register, { isSuccess: registerSuccess, error: registerError }] = useRegisterMutation();
   const navigate = useNavigate();
 
   const switchMode = () => {
@@ -46,27 +42,23 @@ const SignUp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const data = form;
     if (isSignup) {
-      await register(data);
+      await register(form);
     } else {
-      await login(data);
+      await login(form);
     }
   };
 
   useEffect(() => {
-    if (isSuccess) {
-      const message = data?.message || 'Welcome';
-      toast.success(message);
+    if (loginSuccess || registerSuccess) {
+      toast.success('Welcome');
       navigate('/');
     }
-    if (error) {
-      if ('data' in error) {
-        const errorData = error;
-        toast.error(errorData.data.message);
-      }
+    if (loginError || registerError) {
+      const errorMessage = loginError?.data?.message || registerError?.data?.message || 'Something went wrong!';
+      toast.error(errorMessage);
     }
-  }, [isSuccess, error]);
+  }, [loginSuccess, loginError, registerSuccess, registerError]);
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -130,7 +122,7 @@ const SignUp = () => {
               label="Password"
               handleChange={handleChange}
               type={showPassword ? 'text' : 'password'}
-              handleShowPassword={handleShowPassword}
+              handleShowPassword={() => setShowPassword(!showPassword)}
             />
             {isSignup && (
               <Input
