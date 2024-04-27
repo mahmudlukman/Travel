@@ -18,7 +18,7 @@ export const register = tryCatch(
       email,
       password,
     });
-    res.status(201).json({ success: true, result: user });
+    res.status(201).json({ success: true, user });
   }
 );
 
@@ -64,6 +64,6 @@ export const getUserInfo = tryCatch(
   async (req: Request, res: Response, next: NextFunction) => {
     const userId = req.user?._id;
     const user = await UserModel.findById(userId);
-    res.status(200).json({ success: true, data: user });
+    res.status(200).json({ success: true, user });
   }
 );

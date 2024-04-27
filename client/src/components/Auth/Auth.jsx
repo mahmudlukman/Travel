@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import {
   Avatar,
@@ -7,9 +7,14 @@ import {
   Grid,
   Typography,
   Container,
+  CircularProgress,
   useTheme,
 } from '@mui/material';
-import {LockOutlined} from '@mui/icons-material';
+import { LockOutlined } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
+import { useLoginMutation } from '../../redux/features/auth/authApi';
+import { useRegisterMutation } from '../../redux/features/auth/authApi';
+import { toast } from 'react-hot-toast';
 
 import Icon from './icon';
 import Input from './Input';
@@ -29,6 +34,9 @@ const SignUp = () => {
 
   const [showPassword, setShowPassword] = useState(false);
   const handleShowPassword = () => setShowPassword(!showPassword);
+  const [login, { isSuccess, data, isLoading, error }] = useLoginMutation();
+  const [register] = useRegisterMutation();
+  const navigate = useNavigate();
 
   const switchMode = () => {
     setForm(initialState);
@@ -36,9 +44,29 @@ const SignUp = () => {
     setShowPassword(false);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    const data = form;
+    if (isSignup) {
+      await register(data);
+    } else {
+      await login(data);
+    }
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      const message = data?.message || 'Welcome';
+      toast.success(message);
+      navigate('/');
+    }
+    if (error) {
+      if ('data' in error) {
+        const errorData = error;
+        toast.error(errorData.data.message);
+      }
+    }
+  }, [isSuccess, error]);
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -71,7 +99,7 @@ const SignUp = () => {
             width: '100%', // Fix IE 11 issue.
             marginTop: theme.spacing(3),
           }}
-          // onSubmit={handleSubmit}
+          onSubmit={handleSubmit}
         >
           <Grid container spacing={2}>
             {isSignup && (

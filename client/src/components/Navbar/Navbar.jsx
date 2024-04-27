@@ -1,3 +1,4 @@
+import { useSelector } from 'react-redux';
 import {
   AppBar,
   Typography,
@@ -13,6 +14,8 @@ import travelsText from '../../assets/travelsText.png';
 
 const Navbar = () => {
   const theme = useTheme();
+  const { user } = useSelector((state) => state.auth);
+  console.log(user)
 
   return (
     <AppBar
@@ -56,6 +59,7 @@ const Navbar = () => {
           },
         }}
       >
+        {user ? (
           <div
             sx={{
               display: 'flex',
@@ -74,10 +78,10 @@ const Navbar = () => {
                 color: 'grey',
                 backgroundColor: 'grey',
               }}
-              alt=""
-              src={travelsLogo}
+              alt={user?.name}
+              src={user?.avatar?.url}
             >
-              ML
+              {user?.name.charAt(0)}
             </Avatar>
             <Typography
               sx={{
@@ -87,7 +91,7 @@ const Navbar = () => {
               }}
               variant="h6"
             >
-              Mahmud
+              {user?.name}
             </Typography>
             <Button
               variant="contained"
@@ -97,6 +101,7 @@ const Navbar = () => {
               Logout
             </Button>
           </div>
+        ) : (
           <Button
             component={Link}
             to="/auth"
@@ -105,6 +110,7 @@ const Navbar = () => {
           >
             Sign In
           </Button>
+        )}
       </Toolbar>
     </AppBar>
   );
