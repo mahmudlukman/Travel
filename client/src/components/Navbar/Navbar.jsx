@@ -8,6 +8,7 @@ import {
   useTheme,
   Box,
 } from '@mui/material';
+import { deepPurple } from '@mui/material/colors';
 import { Link, useNavigate } from 'react-router-dom';
 import { useLogoutQuery } from '../../redux/features/auth/authApi';
 
@@ -84,8 +85,8 @@ const Navbar = () => {
           >
             <Avatar
               sx={{
-                color: 'blue',
-                backgroundColor: 'lightGrey',
+                color: theme.palette.getContrastText(deepPurple[500]),
+                backgroundColor: deepPurple[500],
               }}
               alt={user?.name}
               src={user?.avatar?.url}

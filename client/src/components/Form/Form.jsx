@@ -6,12 +6,26 @@ import {
   Paper,
   Chip,
   useTheme,
-} from '@material-ui/core';
+  Box,
+} from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { useDispatch, useSelector } from 'react-redux';
-import { Box } from '@mui/material';
+import { CloudUpload } from '@mui/icons-material';
 // import ChipInput from 'material-ui-chip-input';
 
-const Form = ({ currentId, setCurrentId }) => {
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
+});
+
+const Form = () => {
   const theme = useTheme();
   // const [postData, setPostData] = useState({
   //   title: '',
@@ -80,18 +94,17 @@ const Form = ({ currentId, setCurrentId }) => {
           justifyContent: 'center',
           '& .MuiTextField-root': { margin: theme.spacing(1) },
         }}
-        onSubmit={handleSubmit}
+        // onSubmit={handleSubmit}
       >
-        <Typography variant="h6">
-          {currentId ? `Editing "${post?.title}"` : 'Creating a Memory'}
-        </Typography>
+        <Typography variant="h6">Creating a Memory</Typography>
         <TextField
           name="title"
           variant="outlined"
           label="Title"
           fullWidth
-          value={postData.title}
-          onChange={(e) => setPostData({ ...postData, title: e.target.value })}
+          sx={{ marginBottom: '10px' }}
+          // value={postData.title}
+          // onChange={(e) => setPostData({ ...postData, title: e.target.value })}
         />
         <TextField
           name="message"
@@ -100,10 +113,10 @@ const Form = ({ currentId, setCurrentId }) => {
           fullWidth
           multiline
           rows={4}
-          value={postData.message}
-          onChange={(e) =>
-            setPostData({ ...postData, message: e.target.value })
-          }
+          // value={postData.message}
+          // onChange={(e) =>
+          //   setPostData({ ...postData, message: e.target.value })
+          // }
         />
         <div style={{ padding: '5px 0', width: '94%' }}>
           <Chip
@@ -111,22 +124,25 @@ const Form = ({ currentId, setCurrentId }) => {
             variant="outlined"
             label="Tags"
             fullWidth
-            value={postData.tags}
-            onClick={(chip) => handleAddChip(chip)}
-            onDelete={(chip) => handleDeleteChip(chip)}
+            // value={postData.tags}
+            // onClick={(chip) => handleAddChip(chip)}
+            // onDelete={(chip) => handleDeleteChip(chip)}
           />
         </div>
         <Box sx={{ width: '97%', margin: '10px 0' }}>
-          <FileBase
-            type="file"
-            multiple={false}
-            onDone={({ base64 }) =>
-              setPostData({ ...postData, selectedFile: base64 })
-            }
-          />
+          <Button
+            component="label"
+            role={undefined}
+            variant="contained"
+            tabIndex={-1}
+            startIcon={<CloudUpload />}
+          >
+            Upload file
+            <VisuallyHiddenInput type="file" />
+          </Button>
         </Box>
         <Button
-          sx={{ marginBottom: 10 }}
+          sx={{ marginBottom: "10px" }}
           variant="contained"
           color="primary"
           size="large"
@@ -139,7 +155,7 @@ const Form = ({ currentId, setCurrentId }) => {
           variant="contained"
           color="secondary"
           size="small"
-          onClick={clear}
+          // onClick={clear}
           fullWidth
         >
           Clear

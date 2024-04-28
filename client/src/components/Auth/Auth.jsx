@@ -10,7 +10,10 @@ import {
 } from '@mui/material';
 import { LockOutlined } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-import { useLoginMutation, useRegisterMutation } from '../../redux/features/auth/authApi';
+import {
+  useLoginMutation,
+  useRegisterMutation,
+} from '../../redux/features/auth/authApi';
 import { toast } from 'react-hot-toast';
 
 import Input from './Input';
@@ -28,8 +31,10 @@ const SignUp = () => {
   const [form, setForm] = useState(initialState);
   const [isSignup, setIsSignup] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [login, { isSuccess: loginSuccess, error: loginError }] = useLoginMutation();
-  const [register, { isSuccess: registerSuccess, error: registerError }] = useRegisterMutation();
+  const [login, { isSuccess: loginSuccess, error: loginError }] =
+    useLoginMutation();
+  const [register, { isSuccess: registerSuccess, error: registerError }] =
+    useRegisterMutation();
   const navigate = useNavigate();
 
   const switchMode = () => {
@@ -40,6 +45,11 @@ const SignUp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isSignup && form.password !== form.confirmPassword) {
+      toast.error('Passwords do not match!');
+      return;
+    }
+
     if (isSignup) {
       await register(form);
     } else {
@@ -48,12 +58,20 @@ const SignUp = () => {
   };
 
   useEffect(() => {
-    if (loginSuccess || registerSuccess) {
+    if (loginSuccess) {
       toast.success('Welcome');
       navigate('/');
     }
+
+    if (registerSuccess) {
+      toast.success('Registration Successful! You can log in to your account.');
+      navigate('/');
+    }
     if (loginError || registerError) {
-      const errorMessage = loginError?.data?.message || registerError?.data?.message || 'Something went wrong!';
+      const errorMessage =
+        loginError?.data?.message ||
+        registerError?.data?.message ||
+        'Something went wrong!';
       toast.error(errorMessage);
     }
   }, [loginSuccess, loginError, registerSuccess, registerError]);

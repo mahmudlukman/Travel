@@ -6,8 +6,12 @@ import {
   Grow,
   useTheme,
   Chip,
+  TextField,
+  Paper,
 } from '@mui/material';
-import React from 'react';
+import Pagination from '../Pagination';
+import Form from '../Form/Form';
+import Travels from '../Travels/Travels'
 
 const Home = () => {
   const theme = useTheme();
@@ -26,7 +30,8 @@ const Home = () => {
           }}
         >
           <Grid item xs={12} sm={6} md={9}>
-            <Posts setCurrentId={setCurrentId} />
+            Posts
+            <Travels />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
             <AppBar
@@ -40,17 +45,17 @@ const Home = () => {
               color="inherit"
             >
               <TextField
-                onKeyDown={handleKeyPress}
+                // onKeyDown={handleKeyPress}
                 name="search"
                 variant="outlined"
                 label="Search Memories"
                 fullWidth
-                value={search}
+                // value={search}
                 // onChange={(e) => setSearch(e.target.value)}
               />
               <Chip
                 style={{ margin: '10px 0' }}
-                value={tags}
+                // value={tags}
                 // onClick={(chip) => handleAddChip(chip)}
                 // onDelete={(chip) => handleDeleteChip(chip)}
                 label="Search Tags"
@@ -65,12 +70,12 @@ const Home = () => {
                 Search
               </Button>
             </AppBar>
-            <Form currentId={currentId} setCurrentId={setCurrentId} />
+            <Form />
             <Paper
               sx={{ borderRadius: 4, marginTop: '1rem', padding: '16px' }}
               elevation={6}
             >
-              <Pagination page={page} />
+              <Pagination />
             </Paper>
           </Grid>
         </Grid>
