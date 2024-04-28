@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import Pagination from '../Pagination';
 import Form from '../Form/Form';
-import Travels from '../Travels/Travels'
+import Travels from '../Travels/Travels';
 
 const Home = () => {
   const theme = useTheme();
@@ -30,7 +30,6 @@ const Home = () => {
           }}
         >
           <Grid item xs={12} sm={6} md={9}>
-            Posts
             <Travels />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>

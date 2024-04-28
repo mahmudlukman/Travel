@@ -1,19 +1,20 @@
 import React from 'react';
-import { Grid, CircularProgress } from '@mui/material';
-import { useSelector } from 'react-redux';
-import styled from '@emotion/styled';
+import { Grid, CircularProgress, Typography } from '@mui/material';
 import Travel from './Travel/Travel';
+import { useGetTravelsQuery } from '../../redux/features/travel/travelApi';
 
-// import Post from './Post/Post';
-
-const Posts = () => {
+const Travels = () => {
   // const { posts, isLoading } = useSelector((state) => state.posts);
+  const { data, isLoading } = useGetTravelsQuery();
+  console.log(data)
+  const travels = data.data
+  console.log(travels)
+  if (!data || !Array.isArray(data) || data.length === 0)
+    return <Typography>No travels</Typography>;
 
-  // if (!posts.length && !isLoading) return 'No posts';
-
-  // return isLoading ? (
-  //   <CircularProgress />
-  // ) : (
+  return isLoading ? (
+    <CircularProgress />
+  ) : (
     <Grid
       sx={{
         borderRadius: 15,
@@ -28,10 +29,13 @@ const Posts = () => {
       alignItems="stretch"
       spacing={3}
     >
-      <Grid item xs={12} sm={12} md={6} lg={3}>
-        <Travel />
-      </Grid>
+      {Array.isArray(data.data) && data.data.map((travel) => (
+        <Grid key={travel._id} item xs={12} sm={12} md={6} lg={3}>
+          <Travel travel={travel} />
+        </Grid>
+      ))}
     </Grid>
+  );
 };
 
-export default Posts;
+export default Travels;

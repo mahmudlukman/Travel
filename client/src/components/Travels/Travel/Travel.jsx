@@ -21,7 +21,8 @@ import moment from 'moment';
 
 // import { likePost, deletePost } from '../../../actions/posts';
 
-const Travel = () => {
+const Travel = ({ travel }) => {
+
   // const user = JSON.parse(localStorage.getItem('profile'));
   // const [likes, setLikes] = useState(post?.likes);
 
@@ -63,11 +64,11 @@ const Travel = () => {
   //   );
   // };
 
-  const openPost = (e) => {
-    // dispatch(getPost(post._id, history));
+  // const openPost = (e) => {
+  //   // dispatch(getPost(post._id, history));
 
-    history.push(`/posts/${post._id}`);
-  };
+  //   history.push(`/posts/${post._id}`);
+  // };
 
   return (
     <Card
@@ -100,9 +101,10 @@ const Travel = () => {
             backgroundBlendMode: 'darken',
           }}
           image={
+            travel?.image?.url ||
             'https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png'
           }
-          // title={post.title}
+          title={travel.title}
         />
         <Box
           sx={{
@@ -112,10 +114,9 @@ const Travel = () => {
             color: 'white',
           }}
         >
-          <Typography variant="h6">Name</Typography>
+          <Typography variant="h6">{travel.name}</Typography>
           <Typography variant="body2">
-            Time ago
-            {/* {moment(post.createdAt).fromNow()} */}
+            {moment(travel.createdAt).fromNow()}
           </Typography>
         </Box>
         <Box
@@ -146,8 +147,7 @@ const Travel = () => {
           }}
         >
           <Typography variant="body2" color="textSecondary" component="h2">
-            tags
-            {/* {post.tags.map((tag) => `#${tag} `)} */}
+            {travel.tags.map((tag) => `#${tag} `)}
           </Typography>
         </Box>
         <Typography
@@ -156,13 +156,11 @@ const Travel = () => {
           variant="h5"
           component="h2"
         >
-          title
-          {/* {post.title} */}
+          {travel.title}
         </Typography>
         <CardContent>
           <Typography variant="body2" color="textSecondary" component="p">
-            message
-            {/* {post.message.split(' ').splice(0, 20).join(' ')}... */}
+            {travel.message.split(' ').splice(0, 20).join(' ')}...
           </Typography>
         </CardContent>
       </ButtonBase>
@@ -179,15 +177,15 @@ const Travel = () => {
           // disabled={!user?.result}
           // onClick={handleLike}
         >
-          <Likes />
+          {/* <Likes /> */}
         </Button>
-          <Button
-            size="small"
-            color="secondary"
-            // onClick={() => dispatch(deletePost(post._id))}
-          >
-            <Delete fontSize="small" /> &nbsp; Delete
-          </Button>
+        <Button
+          size="small"
+          color="secondary"
+          // onClick={() => dispatch(deletePost(post._id))}
+        >
+          <Delete fontSize="small" /> &nbsp; Delete
+        </Button>
       </CardActions>
     </Card>
   );
