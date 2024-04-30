@@ -7,6 +7,7 @@ import {
   Typography,
   Container,
   useTheme,
+  CircularProgress,
 } from '@mui/material';
 import { LockOutlined } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
@@ -31,9 +32,9 @@ const SignUp = () => {
   const [form, setForm] = useState(initialState);
   const [isSignup, setIsSignup] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [login, { isSuccess: loginSuccess, error: loginError }] =
+  const [login, {isLoading: loginLoading, isSuccess: loginSuccess, error: loginError }] =
     useLoginMutation();
-  const [register, { isSuccess: registerSuccess, error: registerError }] =
+  const [register, {isLoading: registerLoading, isSuccess: registerSuccess, error: registerError }] =
     useRegisterMutation();
   const navigate = useNavigate();
 
@@ -156,7 +157,11 @@ const SignUp = () => {
             color="primary"
             sx={{ margin: theme.spacing(3, 0, 2) }}
           >
-            {isSignup ? 'Sign Up' : 'Sign In'}
+            {loginLoading || registerLoading ? (
+              <CircularProgress size={24} color="inherit" />
+            ) : (
+              isSignup ? 'Sign Up' : 'Sign In'
+            )}
           </Button>
           <Grid container justify="flex-end">
             <Grid item>

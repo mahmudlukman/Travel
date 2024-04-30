@@ -7,11 +7,16 @@ import {
   Chip,
   useTheme,
   Box,
+  CircularProgress,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { CloudUpload } from '@mui/icons-material';
-// import ChipInput from 'material-ui-chip-input';
+import {
+  useGetTravelsQuery,
+  useCreateTravelMutation,
+} from '../../redux/features/travel/travelApi';
+import toast from 'react-hot-toast';
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -27,61 +32,92 @@ const VisuallyHiddenInput = styled('input')({
 
 const Form = () => {
   const theme = useTheme();
-  // const [postData, setPostData] = useState({
-  //   title: '',
-  //   message: '',
-  //   tags: [],
-  //   selectedFile: '',
-  // });
+  const { user } = useSelector((state) => state.auth);
+  const { data: travel, refetch } = useGetTravelsQuery();
+  const [createTravel, { isLoading, isSuccess, error }] =
+    useCreateTravelMutation();
+  const [travelData, setTravelData] = useState({
+    title: '',
+    message: '',
+    tags: [],
+    image: null,
+  });
+
   // const post = useSelector((state) =>
   //   currentId
   //     ? state.posts.posts.find((message) => message._id === currentId)
   //     : null
   // );
-  // const dispatch = useDispatch();
 
-  // const clear = () => {
-  //   setCurrentId(0);
-  //   setPostData({ title: '', message: '', tags: [], selectedFile: '' });
-  // };
+  const handleFileChange = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        if (reader.readyState === 2) {
+          setTravelData({ ...travelData, image: reader.result });
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
-  // useEffect(() => {
-  //   if (!post?.title) clear();
-  //   if (post) setPostData(post);
-  // }, [post]);
+  const clear = () => {
+    // setCurrentId(0);
+    setTravelData({ title: '', message: '', tags: [], image: null });
+  };
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
+  useEffect(() => {
+    if (!travel?.title) clear();
+    if (travel) setTravelData(travel);
+  }, [travel]);
 
-  //   if (currentId === 0) {
-  //     dispatch(createPost({ ...postData, name: user?.name }, history));
-  //     clear();
-  //   } else {
-  //     dispatch(updatePost(currentId, { ...postData, name: user?.name }));
-  //     clear();
-  //   }
-  // };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await createTravel({ ...travelData, name: user?.name });
+    clear();
+    refetch();
+    // if (currentId === 0) {
+    //   dispatch(createPost({ ...travelData, name: user?.name }, history));
+    //   clear();
+    // } else {
+    //   dispatch(updatePost(currentId, { ...travelData, name: user?.name }));
+    //   clear();
+    // }
+  };
 
-  // if (!user?.name) {
-  //   return (
-  //     <Paper className={classes.paper} elevation={6}>
-  //       <Typography variant="h6" align="center">
-  //         Please Sign In to create your own memories and like other's memories.
-  //       </Typography>
-  //     </Paper>
-  //   );
-  // }
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success('Travel created successfully');
+    }
+    if (error) {
+      if ('data' in error) {
+        const errorMessage = error;
+        toast.error(errorMessage.data.message);
+      }
+    }
+  }, [isLoading, isSuccess, error]);
 
-  // const handleAddChip = (tag) => {
-  //   setPostData({ ...postData, tags: [...postData.tags, tag] });
-  // };
+  if (!user?.name) {
+    return (
+      <Paper sx={{ padding: theme.spacing(2) }} elevation={6}>
+        <Typography variant="h6" align="center">
+          Please Sign In to create your own memories and like other's memories.
+        </Typography>
+      </Paper>
+    );
+  }
 
-  // const handleDeleteChip = (chipToDelete) => {
-  //   setPostData({
-  //     ...postData,
-  //     tags: postData.tags.filter((tag) => tag !== chipToDelete),
-  //   });
-  // };
+  const handleAddChip = (tag) => {
+    setTravelData({ ...travelData, tags: [...travelData.tags, tag] });
+  };
+
+  const handleDeleteChip = (chipToDelete) => {
+    setTravelData({
+      ...travelData,
+      tags: travelData.tags.filter((tag) => tag !== chipToDelete),
+    });
+  };
 
   return (
     <Paper sx={{ padding: theme.spacing(2) }} elevation={6}>
@@ -94,7 +130,7 @@ const Form = () => {
           justifyContent: 'center',
           '& .MuiTextField-root': { margin: theme.spacing(1) },
         }}
-        // onSubmit={handleSubmit}
+        onSubmit={handleSubmit}
       >
         <Typography variant="h6">Creating a Memory</Typography>
         <TextField
@@ -102,8 +138,10 @@ const Form = () => {
           variant="outlined"
           label="Title"
           sx={{ width: '100%', marginBottom: '10px' }}
-          // value={postData.title}
-          // onChange={(e) => setPostData({ ...postData, title: e.target.value })}
+          value={travelData.title}
+          onChange={(e) =>
+            setTravelData({ ...travelData, title: e.target.value })
+          }
         />
         <TextField
           name="message"
@@ -112,23 +150,32 @@ const Form = () => {
           multiline
           rows={4}
           sx={{ width: '100%' }}
-          // value={postData.message}
-          // onChange={(e) =>
-          //   setPostData({ ...postData, message: e.target.value })
-          // }
+          value={travelData.message}
+          onChange={(e) =>
+            setTravelData({ ...travelData, message: e.target.value })
+          }
         />
-        <div style={{ padding: '5px 0', width: '94%' }}>
+        <Box style={{ padding: '5px 0', width: '94%' }}>
           <Chip
             name="tags"
             variant="outlined"
             label="Tags"
-            sx={{ width: '100%' }}
-            // value={postData.tags}
-            // onClick={(chip) => handleAddChip(chip)}
-            // onDelete={(chip) => handleDeleteChip(chip)}
+            fullWidth
+            value={travelData.tags}
+            clickable={(chip) => handleAddChip(chip)}
+            onDelete={(chip) => handleDeleteChip(chip)}
           />
-        </div>
+        </Box>
         <Box sx={{ width: '97%', margin: '10px 0' }}>
+          <Box sx={{ width: '100%', minHeight: '50px' }}>
+            {travelData.image && (
+              <img
+                src={travelData.image}
+                alt=""
+                style={{ width: '100%', objectFit: 'cover' }}
+              />
+            )}
+          </Box>
           <Button
             component="label"
             role={undefined}
@@ -137,23 +184,28 @@ const Form = () => {
             startIcon={<CloudUpload />}
           >
             Upload file
-            <VisuallyHiddenInput type="file" />
+            <VisuallyHiddenInput
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              // style={{ display: 'none' }}
+            />
           </Button>
         </Box>
         <Button
           sx={{ width: '100%', marginBottom: '10px' }}
           variant="contained"
           color="primary"
-          size="large"
+          size="small"
           type="submit"
         >
-          Submit
+          {isLoading ? <CircularProgress size={24} color="inherit"/> : 'Submit'}
         </Button>
         <Button
           variant="contained"
           color="secondary"
           size="small"
-          // onClick={clear}
+          onClick={clear}
           sx={{ width: '100%' }}
         >
           Clear

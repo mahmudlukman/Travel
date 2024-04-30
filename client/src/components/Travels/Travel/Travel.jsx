@@ -23,9 +23,9 @@ import { useSelector } from 'react-redux';
 
 const Travel = ({ travel }) => {
   const { user } = useSelector((state) => state.auth);
-  // const [likes, setLikes] = useState(post?.likes);
+  // const [likes, setLikes] = useState(travel?.likes);
 
-  // const hasLikedPost = post.likes.find((like) => like === userId);
+  // const hasLikedPost = travel.likes.find((like) => like === user._id);
 
   // const handleLike = async () => {
   //   dispatch(likePost(post._id));
@@ -39,9 +39,9 @@ const Travel = ({ travel }) => {
 
   // const Likes = () => {
   //   if (likes.length > 0) {
-  //     return likes.find((like) => like === userId) ? (
+  //     return likes.find((like) => like === user._id) ? (
   //       <>
-  //         <ThumbUpAltIcon fontSize="small" />
+  //         <ThumbUpAlt fontSize="small" />
   //         &nbsp;
   //         {likes.length > 2
   //           ? `You and ${likes.length - 1} others`
@@ -70,123 +70,6 @@ const Travel = ({ travel }) => {
   // };
 
   return (
-    // <Card
-    //   sx={{
-    //     display: 'flex',
-    //     flexDirection: 'column',
-    //     justifyContent: 'space-between',
-    //     borderRadius: '15px',
-    //     height: '100%',
-    //     position: 'relative',
-    //   }}
-    //   raised
-    //   elevation={6}
-    // >
-    //   <ButtonBase
-    //     component="span"
-    //     name="test"
-    //     sx={{
-    //       padding: '0 16px 8px 16px',
-    //       display: 'flex',
-    //       justifyContent: 'space-between',
-    //     }}
-    //     // onClick={openPost}
-    //   >
-    //     <CardMedia
-    //       sx={{
-    //         height: 0,
-    //         paddingTop: '56.25%',
-    //         backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    //         backgroundBlendMode: 'darken',
-    //       }}
-    //       image={
-    //         travel?.image?.url ||
-    //         'https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png'
-    //       }
-    //       title={travel.title}
-    //     />
-    //     <Box
-    //       sx={{
-    //         position: 'absolute',
-    //         top: '20px',
-    //         left: '20px',
-    //         color: 'white',
-    //       }}
-    //     >
-    //       <Typography variant="h6">{travel.name}</Typography>
-    //       <Typography variant="body2">
-    //         {moment(travel.createdAt).fromNow()}
-    //       </Typography>
-    //     </Box>
-    //     <Box
-    //       sx={{
-    //         position: 'absolute',
-    //         top: '20px',
-    //         right: '20px',
-    //         color: 'white',
-    //       }}
-    //       name="edit"
-    //     >
-    //       <Button
-    //         // onClick={(e) => {
-    //         //   e.stopPropagation();
-    //         //   setCurrentId(post._id);
-    //         // }}
-    //         style={{ color: 'white' }}
-    //         size="small"
-    //       >
-    //         <MoreHoriz fontSize="default" />
-    //       </Button>
-    //     </Box>
-    //     <Box
-    //       sx={{
-    //         display: 'flex',
-    //         justifyContent: 'space-between',
-    //         margin: '20px',
-    //       }}
-    //     >
-    //       <Typography variant="body2" color="textSecondary" component="h2">
-    //         {travel.tags.map((tag) => `#${tag} `)}
-    //       </Typography>
-    //     </Box>
-    //     <Typography
-    //       sx={{ padding: '0 16px' }}
-    //       gutterBottom
-    //       variant="h5"
-    //       component="h2"
-    //     >
-    //       {travel.title}
-    //     </Typography>
-    //     <CardContent>
-    //       <Typography variant="body2" color="textSecondary" component="p">
-    //         {travel.message.split(' ').splice(0, 20).join(' ')}...
-    //       </Typography>
-    //     </CardContent>
-    //   </ButtonBase>
-    //   <CardActions
-    //     sx={{
-    //       padding: '0 16px 8px 16px',
-    //       display: 'flex',
-    //       justifyContent: 'space-between',
-    //     }}
-    //   >
-    //     <Button
-    //       size="small"
-    //       color="primary"
-    //       // disabled={!user?.result}
-    //       // onClick={handleLike}
-    //     >
-    //       {/* <Likes /> */}
-    //     </Button>
-    //     <Button
-    //       size="small"
-    //       color="secondary"
-    //       // onClick={() => dispatch(deletePost(post._id))}
-    //     >
-    //       <Delete fontSize="small" /> &nbsp; Delete
-    //     </Button>
-    //   </CardActions>
-    // </Card>
     <Card
       sx={{
         display: 'flex',
@@ -231,7 +114,7 @@ const Travel = ({ travel }) => {
             {moment(travel.createdAt).fromNow()}
           </Typography>
         </Box>
-        {user?._id === travel?.creator && (
+        {user?.name === travel?.creator && (
           <Box
             sx={{
               position: 'absolute',
@@ -293,7 +176,7 @@ const Travel = ({ travel }) => {
         >
           {/* <Likes /> */}
         </Button>
-        {user?._id === travel?.creator && (
+        {user?.name === travel?.creator && (
           <Button
             size="small"
             color="secondary"
