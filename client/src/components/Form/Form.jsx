@@ -101,8 +101,7 @@ const Form = () => {
           name="title"
           variant="outlined"
           label="Title"
-          fullWidth
-          sx={{ marginBottom: '10px' }}
+          sx={{ width: '100%', marginBottom: '10px' }}
           // value={postData.title}
           // onChange={(e) => setPostData({ ...postData, title: e.target.value })}
         />
@@ -110,9 +109,9 @@ const Form = () => {
           name="message"
           variant="outlined"
           label="Message"
-          fullWidth
           multiline
           rows={4}
+          sx={{ width: '100%' }}
           // value={postData.message}
           // onChange={(e) =>
           //   setPostData({ ...postData, message: e.target.value })
@@ -123,7 +122,7 @@ const Form = () => {
             name="tags"
             variant="outlined"
             label="Tags"
-            fullWidth
+            sx={{ width: '100%' }}
             // value={postData.tags}
             // onClick={(chip) => handleAddChip(chip)}
             // onDelete={(chip) => handleDeleteChip(chip)}
@@ -142,12 +141,11 @@ const Form = () => {
           </Button>
         </Box>
         <Button
-          sx={{ marginBottom: "10px" }}
+          sx={{ width: '100%', marginBottom: '10px' }}
           variant="contained"
           color="primary"
           size="large"
           type="submit"
-          fullWidth
         >
           Submit
         </Button>
@@ -156,7 +154,7 @@ const Form = () => {
           color="secondary"
           size="small"
           // onClick={clear}
-          fullWidth
+          sx={{ width: '100%' }}
         >
           Clear
         </Button>
