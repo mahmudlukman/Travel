@@ -17,13 +17,19 @@ import {
 } from '@mui/icons-material';
 import moment from 'moment';
 import { useSelector } from 'react-redux';
+import { useDeleteTravelMutation, useGetTravelsQuery } from '../../../redux/features/travel/travelApi';
+import { toast } from 'react-hot-toast';
 // import { useHistory } from 'react-router-dom';
 
 // import { likePost, deletePost } from '../../../actions/posts';
 
 const Travel = ({ travel }) => {
   const { user } = useSelector((state) => state.auth);
+  const [deleteTravel, { isSuccess, error }] =
+    useDeleteTravelMutation();
+    const { refetch } = useGetTravelsQuery();
   // const [likes, setLikes] = useState(travel?.likes);
+  // const [deleteTravel, { isLoading: deleteLoading, refetch }] = useDeleteTravelMutation();
 
   // const hasLikedPost = travel.likes.find((like) => like === user._id);
 
@@ -68,6 +74,12 @@ const Travel = ({ travel }) => {
 
   //   history.push(`/posts/${post._id}`);
   // };
+
+  const handleDelete = async (e) => {
+    await deleteTravel(travel._id);
+    refetch();
+    toast.success('Travel deleted successfully');
+  };
 
   return (
     <Card
@@ -177,11 +189,7 @@ const Travel = ({ travel }) => {
           {/* <Likes /> */}
         </Button>
         {user?.name === travel?.creator && (
-          <Button
-            size="small"
-            color="secondary"
-            // onClick={() => dispatch(deletePost(travel._id))}
-          >
+          <Button size="small" color="secondary" onClick={handleDelete}>
             <Delete fontSize="small" /> &nbsp; Delete
           </Button>
         )}
