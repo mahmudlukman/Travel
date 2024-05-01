@@ -17,57 +17,59 @@ import {
 } from '@mui/icons-material';
 import moment from 'moment';
 import { useSelector } from 'react-redux';
-import { useDeleteTravelMutation, useGetTravelsQuery } from '../../../redux/features/travel/travelApi';
+import {
+  useDeleteTravelMutation,
+  useGetTravelsQuery,
+  useLikeTravelMutation,
+} from '../../../redux/features/travel/travelApi';
 import { toast } from 'react-hot-toast';
 // import { useHistory } from 'react-router-dom';
 
-// import { likePost, deletePost } from '../../../actions/posts';
-
 const Travel = ({ travel }) => {
   const { user } = useSelector((state) => state.auth);
-  const [deleteTravel, { isSuccess, error }] =
-    useDeleteTravelMutation();
-    const { refetch } = useGetTravelsQuery();
-  // const [likes, setLikes] = useState(travel?.likes);
-  // const [deleteTravel, { isLoading: deleteLoading, refetch }] = useDeleteTravelMutation();
+  const [deleteTravel, { isSuccess, error }] = useDeleteTravelMutation();
+  const [likeTravel] = useLikeTravelMutation();
+  const { refetch } = useGetTravelsQuery();
+  const [likes, setLikes] = useState(travel?.likes);
 
-  // const hasLikedPost = travel.likes.find((like) => like === user._id);
+  const hasLikedPost = travel.likes.find((like) => like === user._id);
 
-  // const handleLike = async () => {
-  //   dispatch(likePost(post._id));
+  const handleLike = async () => {
+    await likeTravel(travel._id);
 
-  //   if (hasLikedPost) {
-  //     setLikes(post.likes.filter((id) => id !== userId));
-  //   } else {
-  //     setLikes([...post.likes, userId]);
-  //   }
-  // };
+    if (hasLikedPost) {
+      setLikes(travel.likes.filter((id) => id !== user._id));
+    } else {
+      setLikes([...travel.likes, user._id]);
+    }
+    refetch();
+  };
 
-  // const Likes = () => {
-  //   if (likes.length > 0) {
-  //     return likes.find((like) => like === user._id) ? (
-  //       <>
-  //         <ThumbUpAlt fontSize="small" />
-  //         &nbsp;
-  //         {likes.length > 2
-  //           ? `You and ${likes.length - 1} others`
-  //           : `${likes.length} like${likes.length > 1 ? 's' : ''}`}
-  //       </>
-  //     ) : (
-  //       <>
-  //         <ThumbUpAltOutlined fontSize="small" />
-  //         &nbsp;{likes.length} {likes.length === 1 ? 'Like' : 'Likes'}
-  //       </>
-  //     );
-  //   }
+  const Likes = () => {
+    if (likes.length > 0) {
+      return likes.find((like) => like === user._id) ? (
+        <>
+          <ThumbUpAlt fontSize="small" />
+          &nbsp;
+          {likes.length > 2
+            ? `You and ${likes.length - 1} others`
+            : `${likes.length} like${likes.length > 1 ? 's' : ''}`}
+        </>
+      ) : (
+        <>
+          <ThumbUpAltOutlined fontSize="small" />
+          &nbsp;{likes.length} {likes.length === 1 ? 'Like' : 'Likes'}
+        </>
+      );
+    }
 
-  //   return (
-  //     <>
-  //       <ThumbUpAltOutlined fontSize="small" />
-  //       &nbsp;Like
-  //     </>
-  //   );
-  // };
+    return (
+      <>
+        <ThumbUpAltOutlined fontSize="small" />
+        &nbsp;Like
+      </>
+    );
+  };
 
   // const openPost = (e) => {
   //   // dispatch(getPost(post._id, history));
@@ -184,9 +186,9 @@ const Travel = ({ travel }) => {
           size="small"
           color="primary"
           disabled={!user}
-          // onClick={handleLike}
+          onClick={handleLike}
         >
-          {/* <Likes /> */}
+          <Likes />
         </Button>
         {user?.name === travel?.creator && (
           <Button size="small" color="secondary" onClick={handleDelete}>

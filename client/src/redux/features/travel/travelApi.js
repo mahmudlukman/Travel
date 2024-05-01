@@ -40,7 +40,7 @@ export const travelApi = apiSlice.injectEndpoints({
       }),
     }),
     likeTravel: builder.mutation({
-      query: ({ id }) => ({
+      query: (id) => ({
         url: `like/${id}`,
         method: 'PUT',
         credentials: 'include',
