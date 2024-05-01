@@ -149,13 +149,23 @@ const Form = () => {
           label="Message"
           multiline
           rows={4}
-          sx={{ width: '100%' }}
+          sx={{ width: '100%', marginBottom: '10px' }}
           value={travelData.message}
           onChange={(e) =>
             setTravelData({ ...travelData, message: e.target.value })
           }
         />
-        <Box style={{ padding: '5px 0', width: '94%' }}>
+        <TextField
+          name="tags"
+          variant="outlined"
+          label="Tags (coma separated)"
+          sx={{ width: '100%' }}
+          value={travelData.tags}
+          onChange={(e) =>
+            setTravelData({ ...travelData, tags: e.target.value.split(',') })
+          }
+        />
+        {/* <Box style={{ padding: '5px 0', width: '94%' }}>
           <Chip
             name="tags"
             variant="outlined"
@@ -165,7 +175,7 @@ const Form = () => {
             clickable={(chip) => handleAddChip(chip)}
             onDelete={(chip) => handleDeleteChip(chip)}
           />
-        </Box>
+        </Box> */}
         <Box sx={{ width: '97%', margin: '10px 0' }}>
           <Box sx={{ width: '100%', minHeight: '50px' }}>
             {travelData.image && (
@@ -199,7 +209,11 @@ const Form = () => {
           size="small"
           type="submit"
         >
-          {isLoading ? <CircularProgress size={24} color="inherit"/> : 'Submit'}
+          {isLoading ? (
+            <CircularProgress size={24} color="inherit" />
+          ) : (
+            'Submit'
+          )}
         </Button>
         <Button
           variant="contained"

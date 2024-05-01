@@ -8,6 +8,7 @@ import {
   Typography,
   ButtonBase,
   Box,
+  Chip,
 } from '@mui/material';
 import {
   ThumbUpAlt,
@@ -191,8 +192,8 @@ const Travel = ({ travel }) => {
           <Likes />
         </Button>
         {user?.name === travel?.creator && (
-          <Button size="small" color="secondary" onClick={handleDelete}>
-            <Delete fontSize="small" /> &nbsp; Delete
+          <Button size="small" color="error" onClick={handleDelete}>
+            <Delete fontSize="small" /> &nbsp;
           </Button>
         )}
       </CardActions>
