@@ -26,7 +26,7 @@ import {
 import { toast } from 'react-hot-toast';
 // import { useHistory } from 'react-router-dom';
 
-const Travel = ({ travel }) => {
+const Travel = ({ travel, setCurrentId }) => {
   const { user } = useSelector((state) => state.auth);
   const [deleteTravel, { isSuccess, error }] = useDeleteTravelMutation();
   const [likeTravel] = useLikeTravelMutation();
@@ -142,7 +142,7 @@ const Travel = ({ travel }) => {
             <Button
               onClick={(e) => {
                 e.stopPropagation();
-                // setCurrentId(post._id);
+                setCurrentId(travel._id);
               }}
               style={{ color: 'white' }}
               size="small"

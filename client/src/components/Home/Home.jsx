@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import {
   AppBar,
   Button,
@@ -15,6 +16,7 @@ import Travels from '../Travels/Travels';
 
 const Home = () => {
   const theme = useTheme();
+  const [currentId, setCurrentId] = useState(0);
   return (
     <Grow in>
       <Container maxWidth="xl">
@@ -30,7 +32,7 @@ const Home = () => {
           }}
         >
           <Grid item xs={12} sm={6} md={9}>
-            <Travels />
+            <Travels setCurrentId={setCurrentId} />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
             <AppBar
@@ -69,7 +71,7 @@ const Home = () => {
                 Search
               </Button>
             </AppBar>
-            <Form />
+            <Form currentId={currentId} setCurrentId={setCurrentId} />
             <Paper
               sx={{ borderRadius: 4, marginTop: '1rem', padding: '16px' }}
               elevation={6}

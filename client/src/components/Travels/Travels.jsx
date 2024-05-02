@@ -3,7 +3,7 @@ import { Grid, CircularProgress, Typography } from '@mui/material';
 import Travel from './Travel/Travel';
 import { useGetTravelsQuery } from '../../redux/features/travel/travelApi';
 
-const Travels = () => {
+const Travels = ({ setCurrentId }) => {
   const { data, isLoading } = useGetTravelsQuery();
 
   if (!data || !Array.isArray(data.data) || data.data.length === 0)
@@ -15,7 +15,7 @@ const Travels = () => {
     <Grid container spacing={3}>
       {data.data.map((travel) => (
         <Grid key={travel._id} item xs={12} sm={6} md={4} lg={3}>
-          <Travel travel={travel} />
+          <Travel travel={travel} setCurrentId={setCurrentId} />
         </Grid>
       ))}
     </Grid>

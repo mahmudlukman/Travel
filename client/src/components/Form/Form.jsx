@@ -10,11 +10,12 @@ import {
   CircularProgress,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { CloudUpload } from '@mui/icons-material';
 import {
   useGetTravelsQuery,
   useCreateTravelMutation,
+  useUpdateTravelMutation,
 } from '../../redux/features/travel/travelApi';
 import toast from 'react-hot-toast';
 
@@ -30,12 +31,16 @@ const VisuallyHiddenInput = styled('input')({
   width: 1,
 });
 
-const Form = () => {
+const Form = ({ currentId, setCurrentId }) => {
   const theme = useTheme();
   const { user } = useSelector((state) => state.auth);
   const { data: travel, refetch } = useGetTravelsQuery();
   const [createTravel, { isLoading, isSuccess, error }] =
     useCreateTravelMutation();
+  const [
+    updateTravel,
+    { isLoading: updateLoading, isSuccess: updateSuccess, error: updateError },
+  ] = useUpdateTravelMutation();
   const [travelData, setTravelData] = useState({
     title: '',
     message: '',
@@ -43,7 +48,23 @@ const Form = () => {
     image: null,
   });
 
-  // const post = useSelector((state) =>
+  // const editTravelData = travel && travel.data.find((i) => i._id === id);
+  // useEffect(() => {
+  //   if (updateSuccess) {
+  //     toast.success('Travel updated successfully');
+  //   }
+  //   if (updateError) {
+  //     if ('data' in error) {
+  //       const errorMessage = error;
+  //       toast.error(errorMessage.data.message);
+  //     }
+  //   }
+  // }, [updateSuccess, updateError]);
+
+  const updateTravelData = currentId
+    ? travel.data.find((message) => message._id === currentId)
+    : null;
+  // const posts = useSelector((state) =>
   //   currentId
   //     ? state.posts.posts.find((message) => message._id === currentId)
   //     : null
@@ -63,27 +84,36 @@ const Form = () => {
   };
 
   const clear = () => {
-    // setCurrentId(0);
+    setCurrentId(0);
     setTravelData({ title: '', message: '', tags: [], image: null });
   };
 
+  // useEffect(() => {
+  //   if (!updateTravelData?.title) clear();
+  //   if (updateTravelData) setTravelData(updateTravelData);
+  // }, [updateTravelData]);
   useEffect(() => {
-    if (!travel?.title) clear();
-    if (travel) setTravelData(travel);
-  }, [travel]);
+    if (updateTravelData) {
+      // Set all fields including the image when editing
+      setTravelData({
+        title: updateTravelData.title,
+        message: updateTravelData.message,
+        tags: updateTravelData.tags,
+        image: updateTravelData.image ? updateTravelData.image.url : null,
+      });
+    }
+  }, [updateTravelData]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await createTravel({ ...travelData, name: user?.name });
+    if (currentId === 0) {
+      await createTravel({ ...travelData, name: user?.name });
+    } else {
+      await updateTravel({ id: currentId, data: travelData });
+      toast.success('Travel updated successfully');
+    }
     clear();
     refetch();
-    // if (currentId === 0) {
-    //   dispatch(createPost({ ...travelData, name: user?.name }, history));
-    //   clear();
-    // } else {
-    //   dispatch(updatePost(currentId, { ...travelData, name: user?.name }));
-    //   clear();
-    // }
   };
 
   useEffect(() => {
@@ -108,16 +138,16 @@ const Form = () => {
     );
   }
 
-  const handleAddChip = (tag) => {
-    setTravelData({ ...travelData, tags: [...travelData.tags, tag] });
-  };
+  // const handleAddChip = (tag) => {
+  //   setTravelData({ ...travelData, tags: [...travelData.tags, tag] });
+  // };
 
-  const handleDeleteChip = (chipToDelete) => {
-    setTravelData({
-      ...travelData,
-      tags: travelData.tags.filter((tag) => tag !== chipToDelete),
-    });
-  };
+  // const handleDeleteChip = (chipToDelete) => {
+  //   setTravelData({
+  //     ...travelData,
+  //     tags: travelData.tags.filter((tag) => tag !== chipToDelete),
+  //   });
+  // };
 
   return (
     <Paper sx={{ padding: theme.spacing(2) }} elevation={6}>
@@ -132,7 +162,11 @@ const Form = () => {
         }}
         onSubmit={handleSubmit}
       >
-        <Typography variant="h6">Creating a Memory</Typography>
+        <Typography variant="h6">
+          {currentId
+            ? `Editing "${updateTravelData?.title}"`
+            : 'Creating a Memory'}
+        </Typography>
         <TextField
           name="title"
           variant="outlined"
@@ -165,17 +199,6 @@ const Form = () => {
             setTravelData({ ...travelData, tags: e.target.value.split(',') })
           }
         />
-        {/* <Box style={{ padding: '5px 0', width: '94%' }}>
-          <Chip
-            name="tags"
-            variant="outlined"
-            label="Tags"
-            fullWidth
-            value={travelData.tags}
-            clickable={(chip) => handleAddChip(chip)}
-            onDelete={(chip) => handleDeleteChip(chip)}
-          />
-        </Box> */}
         <Box sx={{ width: '97%', margin: '10px 0' }}>
           <Box sx={{ width: '100%', minHeight: '50px' }}>
             {travelData.image && (
@@ -198,7 +221,6 @@ const Form = () => {
               type="file"
               accept="image/*"
               onChange={handleFileChange}
-              // style={{ display: 'none' }}
             />
           </Button>
         </Box>
@@ -211,10 +233,13 @@ const Form = () => {
         >
           {isLoading ? (
             <CircularProgress size={24} color="inherit" />
+          ) : currentId ? (
+            'Update'
           ) : (
             'Submit'
           )}
         </Button>
+
         <Button
           variant="contained"
           color="secondary"
