@@ -4,6 +4,7 @@ import { Toaster } from 'react-hot-toast';
 import Navbar from './components/Navbar/Navbar';
 import Auth from './components/Auth/Auth';
 import Home from './components/Home/Home';
+import PostDetails from './components/PostDetails/PostDetails'
 
 const App = () => {
   return (
@@ -15,7 +16,7 @@ const App = () => {
           <Route path="/" Component={() => <Navigate to="travels" />} />
           <Route path="/travels" Component={Home} />
           <Route path="/travels/search" Component={Home} />
-          <Route path="/travels/:id" Component={PostDe} />
+          <Route path="/travels/:id" Component={PostDetails} />
           <Route path="/auth" Component={Auth} />
         </Routes>
       </Container>

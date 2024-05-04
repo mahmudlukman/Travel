@@ -1,8 +1,8 @@
 import React, { useState, useRef } from 'react';
-import { Typography, TextField, Button } from '@material-ui/core/';
+import { Typography, TextField, Button, Box } from '@mui/material';
 import { useDispatch } from 'react-redux';
 
-const CommentSection = ({ travel }) => {
+const CommentSection = ({ post }) => {
   // const user = JSON.parse(localStorage.getItem('profile'));
   // const [comment, setComment] = useState('');
   // const dispatch = useDispatch();
@@ -20,41 +20,34 @@ const CommentSection = ({ travel }) => {
   // };
 
   return (
-    <div>
-      <div sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        <div sx={{ height: '200px', overflowY: 'auto', marginRight: '30px' }}>
+    <Box>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Box sx={{ height: '200px', overflowY: 'auto', marginRight: '30px' }}>
           <Typography gutterBottom variant="h6">
             Comments
           </Typography>
           <Typography gutterBottom variant="subtitle1">
-            <strong>Comment</strong>
-            Comment
+            <strong>Comm: </strong>
+            Coming Soon
           </Typography>
-          <div ref={commentsRef} />
-        </div>
-        <div style={{ width: '70%' }}>
-          <Typography gutterBottom variant="h6">
-            Write a comment
-          </Typography>
-          <TextField
-            fullWidth
-            rows={4}
-            variant="outlined"
-            label="Comment"
-            onChange={() => {}}
-          />
-          <br />
-          <Button
-            style={{ marginTop: '10px' }}
-            fullWidth
-            color="primary"
-            variant="contained"
-          >
-            Comment
-          </Button>
-        </div>
-      </div>
-    </div>
+          {/* <div ref={commentsRef} /> */}
+        </Box>
+      </Box>
+      <Box sx={{ width: '70%' }}>
+        <Typography gutterBottom variant="h6">
+          Write a comment
+        </Typography>
+        <TextField fullWidth rows={4} variant="outlined" label="Comment" />
+        <br />
+        <Button
+          style={{ marginTop: '10px' }}
+          fullWidthcolor="primary"
+          variant="contained"
+        >
+          Comment
+        </Button>
+      </Box>
+    </Box>
   );
 };
 
