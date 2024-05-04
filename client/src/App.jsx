@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import { Container } from '@mui/material';
 import { Toaster } from 'react-hot-toast';
 import Navbar from './components/Navbar/Navbar';
@@ -12,7 +12,10 @@ const App = () => {
         <Navbar />
         <Toaster position="top-center" reverseOrder={false} />
         <Routes>
-          <Route path="/" Component={Home} />
+          <Route path="/" Component={() => <Navigate to="travels" />} />
+          <Route path="/travels" Component={Home} />
+          <Route path="/travels/search" Component={Home} />
+          <Route path="/travels/:id" Component={PostDe} />
           <Route path="/auth" Component={Auth} />
         </Routes>
       </Container>

@@ -145,7 +145,7 @@ const Travel = ({ travel, setCurrentId }) => {
                 setCurrentId(travel._id);
               }}
               style={{ color: 'white' }}
-              size="small"
+              size="large"
             >
               <MoreHoriz fontSize="default" />
             </Button>
