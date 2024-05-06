@@ -5,8 +5,10 @@ import Navbar from './components/Navbar/Navbar';
 import Auth from './components/Auth/Auth';
 import Home from './components/Home/Home';
 import PostDetails from './components/PostDetails/PostDetails'
+import { useSelector } from 'react-redux';
 
 const App = () => {
+  const { user } = useSelector((state) => state.auth);
   return (
     <BrowserRouter>
       <Container maxWidth="xl">
@@ -17,7 +19,7 @@ const App = () => {
           <Route path="/travels" Component={Home} />
           <Route path="/travels/search" Component={Home} />
           <Route path="/travels/:id" Component={PostDetails} />
-          <Route path="/auth" Component={Auth} />
+          <Route path="/auth" Component={() => (!user ? <Auth /> : <Navigate to="/travels" />)} />
         </Routes>
       </Container>
     </BrowserRouter>

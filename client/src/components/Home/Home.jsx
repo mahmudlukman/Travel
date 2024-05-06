@@ -6,17 +6,39 @@ import {
   Grid,
   Grow,
   useTheme,
-  Chip,
   TextField,
   Paper,
 } from '@mui/material';
+import { MuiChipsInput } from 'mui-chips-input'
 import Pagination from '../Pagination';
 import Form from '../Form/Form';
 import Travels from '../Travels/Travels';
+import { useLocation } from 'react-router-dom';
+
+function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
 
 const Home = () => {
   const theme = useTheme();
+  const query = useQuery();
+  const page = query.get('page') || 1;
+  const searchQuery = query.get('searchQuery');
+  const [search, setSearch] = useState('');
+  const [tags, setTags] = useState([]);
   const [currentId, setCurrentId] = useState(0);
+
+  const handleKeyPress = (e) => {
+    if (e.keyCode === 13) {
+      // searchPost();
+    }
+  };
+
+  const handleAddChip = (tag) => setTags([...tags, tag]);
+
+  const handleDeleteChip = (chipToDelete) =>
+    setTags(tags.filter((tag) => tag !== chipToDelete));
+
   return (
     <Grow in>
       <Container maxWidth="xl">
@@ -46,19 +68,19 @@ const Home = () => {
               color="inherit"
             >
               <TextField
-                // onKeyDown={handleKeyPress}
+                onKeyDown={handleKeyPress}
                 name="search"
                 variant="outlined"
                 label="Search Memories"
                 fullWidth
-                // value={search}
-                // onChange={(e) => setSearch(e.target.value)}
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
               />
-              <Chip
+              <MuiChipsInput
                 style={{ margin: '10px 0' }}
-                // value={tags}
-                // onClick={(chip) => handleAddChip(chip)}
-                // onDelete={(chip) => handleDeleteChip(chip)}
+                value={tags}
+                onAddChip={(chip) => handleAddChip(chip)}
+                onDeleteChip={(chip) => handleDeleteChip(chip)}
                 label="Search Tags"
                 variant="outlined"
               />

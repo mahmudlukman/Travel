@@ -4,11 +4,11 @@ import {
   Button,
   Typography,
   Paper,
-  Chip,
   useTheme,
   Box,
   CircularProgress,
 } from '@mui/material';
+import { MuiChipsInput } from 'mui-chips-input';
 import { styled } from '@mui/material/styles';
 import { useSelector } from 'react-redux';
 import { CloudUpload } from '@mui/icons-material';
@@ -138,16 +138,16 @@ const Form = ({ currentId, setCurrentId }) => {
     );
   }
 
-  // const handleAddChip = (tag) => {
-  //   setTravelData({ ...travelData, tags: [...travelData.tags, tag] });
-  // };
+  const handleAddChip = (tag) => {
+    setTravelData({ ...travelData, tags: [...travelData.tags, tag] });
+  };
 
-  // const handleDeleteChip = (chipToDelete) => {
-  //   setTravelData({
-  //     ...travelData,
-  //     tags: travelData.tags.filter((tag) => tag !== chipToDelete),
-  //   });
-  // };
+  const handleDeleteChip = (chipToDelete) => {
+    setTravelData({
+      ...travelData,
+      tags: travelData.tags.filter((tag) => tag !== chipToDelete),
+    });
+  };
 
   return (
     <Paper sx={{ padding: theme.spacing(2) }} elevation={6}>
@@ -189,15 +189,13 @@ const Form = ({ currentId, setCurrentId }) => {
             setTravelData({ ...travelData, message: e.target.value })
           }
         />
-        <TextField
-          name="tags"
-          variant="outlined"
-          label="Tags (coma separated)"
-          sx={{ width: '100%' }}
+        <MuiChipsInput
+          style={{ width: '100%' }}
           value={travelData.tags}
-          onChange={(e) =>
-            setTravelData({ ...travelData, tags: e.target.value.split(',') })
-          }
+          onAddChip={(chip) => handleAddChip(chip)}
+          onDeleteChip={(chip) => handleDeleteChip(chip)}
+          label="Tags"
+          variant="outlined"
         />
         <Box sx={{ width: '97%', margin: '10px 0' }}>
           <Box sx={{ width: '100%', minHeight: '50px' }}>
