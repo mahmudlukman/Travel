@@ -43,6 +43,26 @@ export const getTravel = tryCatch(
   }
 );
 
+export const getPostsBySearch = tryCatch(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { searchQuery, tags } = req.query;
+    let title: RegExp;
+    if (typeof searchQuery === 'string') {
+      title = new RegExp(searchQuery, 'i');
+    } else {
+      title = new RegExp('', 'i');
+    }
+
+    const tagsString = tags as string;
+
+    const travels = await TravelModel.find({
+      $or: [{ title }, { tags: { $in: tagsString?.split(',') } }],
+    });
+
+    res.json({ data: travels });
+  }
+);
+
 // export const getTravelsByUser = tryCatch(
 //   async (req: Request, res: Response, next: NextFunction) => {
 //     const userTravelList = req.user?.travels;

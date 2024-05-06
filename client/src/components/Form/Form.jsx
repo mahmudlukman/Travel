@@ -165,7 +165,7 @@ const Form = ({ currentId, setCurrentId }) => {
         <Typography variant="h6">
           {currentId
             ? `Editing "${updateTravelData?.title}"`
-            : 'Creating a Memory'}
+            : 'Create a Travel'}
         </Typography>
         <TextField
           name="title"

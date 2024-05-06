@@ -9,11 +9,11 @@ import {
   TextField,
   Paper,
 } from '@mui/material';
-import { MuiChipsInput } from 'mui-chips-input'
+import { MuiChipsInput } from 'mui-chips-input';
 import Pagination from '../Pagination';
 import Form from '../Form/Form';
 import Travels from '../Travels/Travels';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Navigate } from 'react-router-dom';
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -28,9 +28,19 @@ const Home = () => {
   const [tags, setTags] = useState([]);
   const [currentId, setCurrentId] = useState(0);
 
+  const searchPost = () => {
+    if (search.trim() || tags) {
+      // dispatch(getPostsBySearch({ search, tags: tags.join(',') }));
+      // history.push(`/posts/search?searchQuery=${search || 'none'}&tags=${tags.join(',')}`);
+    } else {
+      // history.push('/');
+      Navigate('/');
+    }
+  };
+
   const handleKeyPress = (e) => {
     if (e.keyCode === 13) {
-      // searchPost();
+      searchPost();
     }
   };
 
@@ -85,7 +95,7 @@ const Home = () => {
                 variant="outlined"
               />
               <Button
-                // onClick={searchPost}
+                onClick={searchPost}
                 // className={classes.searchButton}
                 variant="contained"
                 color="primary"
