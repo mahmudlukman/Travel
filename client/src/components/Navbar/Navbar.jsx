@@ -15,17 +15,21 @@ import { useLogoutQuery } from '../../redux/features/auth/authApi';
 import travelsLogo from '../../assets/travelsLogo.png';
 import memoriesText from '../../assets/memoriesText.png';
 import { useGetTravelsQuery } from '../../redux/features/travel/travelApi';
+import { useEffect, useState } from 'react';
 
 const Navbar = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
+  const [logout, setLogout] = useState(false);
   const { user } = useSelector((state) => state.auth);
   const { refetch } = useGetTravelsQuery();
-  // const { logout } = useLogoutQuery();
-  const navigate = useNavigate();
+  const {} = useLogoutQuery(undefined, {
+    skip: !logout ? true : false,
+  });
 
   const handleLogout = async () => {
-    await logout();
-    // refetch();
+    setLogout(true);
+    refetch();
   };
 
   return (

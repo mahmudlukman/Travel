@@ -24,6 +24,15 @@ export const travelApi = apiSlice.injectEndpoints({
         credentials: 'include',
       }),
     }),
+    getTravelBySearch: builder.query({
+      query: ({searchQuery}) => ({
+        url: `search?searchQuery=${searchQuery.search || 'none'}&tags=${
+          searchQuery.tags
+        }`,
+        method: 'GET',
+        credentials: 'include',
+      }),
+    }),
     deleteTravel: builder.mutation({
       query: (id) => ({
         url: `delete/${id}`,
@@ -60,6 +69,7 @@ export const {
   useCreateTravelMutation,
   useGetTravelsQuery,
   useGetTravelQuery,
+  useGetTravelBySearchQuery,
   useDeleteTravelMutation,
   useGetTravelsByCreatorQuery,
   useUpdateTravelMutation,

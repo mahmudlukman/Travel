@@ -43,7 +43,7 @@ export const getTravel = tryCatch(
   }
 );
 
-export const getPostsBySearch = tryCatch(
+export const getTravelsBySearch = tryCatch(
   async (req: Request, res: Response, next: NextFunction) => {
     const { searchQuery, tags } = req.query;
     let title: RegExp;

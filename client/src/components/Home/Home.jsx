@@ -13,7 +13,8 @@ import { MuiChipsInput } from 'mui-chips-input';
 import Pagination from '../Pagination';
 import Form from '../Form/Form';
 import Travels from '../Travels/Travels';
-import { useLocation, Navigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useGetTravelBySearchQuery } from '../../redux/features/travel/travelApi';
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -24,19 +25,38 @@ const Home = () => {
   const query = useQuery();
   const page = query.get('page') || 1;
   const searchQuery = query.get('searchQuery');
+  const navigate = useNavigate();
   const [search, setSearch] = useState('');
   const [tags, setTags] = useState([]);
   const [currentId, setCurrentId] = useState(0);
+  const { data, currentData, isLoading, isError } = useGetTravelBySearchQuery(
+    searchQuery,
+    tags
+  );
+
+  console.log(currentData);
 
   const searchPost = () => {
-    if (search.trim() || tags) {
-      // dispatch(getPostsBySearch({ search, tags: tags.join(',') }));
-      // history.push(`/posts/search?searchQuery=${search || 'none'}&tags=${tags.join(',')}`);
+    if (search.trim() || tags.length > 0) {
+      // currentData({
+      //   searchQuery: search || 'none',
+      //   tags: tags.join(','),
+      // });
+      navigate(`search?searchQuery=${search || 'none'}&tags=${tags.join(',')}`);
     } else {
       // history.push('/');
-      Navigate('/');
+      navigate('/');
     }
   };
+  // const searchPost = () => {
+  //   if (search.trim() || tags) {
+  //     dispatch(getPostsBySearch({ search, tags: tags.join(',') }));
+  //     history.push(`/posts/search?searchQuery=${search || 'none'}&tags=${tags.join(',')}`);
+  //   } else {
+  //     // history.push('/');
+  //     Navigate('/');
+  //   }
+  // };
 
   const handleKeyPress = (e) => {
     if (e.keyCode === 13) {
@@ -108,7 +128,7 @@ const Home = () => {
               sx={{ borderRadius: 4, marginTop: '1rem', padding: '16px' }}
               elevation={6}
             >
-              <Pagination />
+              <Pagination page={page} />
             </Paper>
           </Grid>
         </Grid>
