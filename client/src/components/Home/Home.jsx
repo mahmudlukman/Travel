@@ -29,34 +29,23 @@ const Home = () => {
   const [search, setSearch] = useState('');
   const [tags, setTags] = useState([]);
   const [currentId, setCurrentId] = useState(0);
-  const { data, currentData, isLoading, isError } = useGetTravelBySearchQuery(
-    searchQuery,
-    tags
-  );
-
-  console.log(currentData);
+  const {
+    data: searchResults,
+    isLoading,
+    isError,
+  } = useGetTravelBySearchQuery({
+    search,
+    tags: tags.join(','),
+  });
 
   const searchPost = () => {
     if (search.trim() || tags.length > 0) {
-      // currentData({
-      //   searchQuery: search || 'none',
-      //   tags: tags.join(','),
-      // });
-      navigate(`search?searchQuery=${search || 'none'}&tags=${tags.join(',')}`);
+      navigate(`search?searchQuery=${search || 'none'}&tags=${tags}`);
+      console.log(searchResults.data);
     } else {
-      // history.push('/');
       navigate('/');
     }
   };
-  // const searchPost = () => {
-  //   if (search.trim() || tags) {
-  //     dispatch(getPostsBySearch({ search, tags: tags.join(',') }));
-  //     history.push(`/posts/search?searchQuery=${search || 'none'}&tags=${tags.join(',')}`);
-  //   } else {
-  //     // history.push('/');
-  //     Navigate('/');
-  //   }
-  // };
 
   const handleKeyPress = (e) => {
     if (e.keyCode === 13) {
@@ -84,7 +73,10 @@ const Home = () => {
           }}
         >
           <Grid item xs={12} sm={6} md={9}>
-            <Travels setCurrentId={setCurrentId} />
+            {/* {searchResults && searchResults.map((result) => (
+              <Travels data={result} setCurrentId={setCurrentId} />
+            ))} */}
+            {/* <Travels setCurrentId={setCurrentId} /> */}
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
             <AppBar
@@ -114,12 +106,7 @@ const Home = () => {
                 label="Search Tags"
                 variant="outlined"
               />
-              <Button
-                onClick={searchPost}
-                // className={classes.searchButton}
-                variant="contained"
-                color="primary"
-              >
+              <Button onClick={searchPost} variant="contained" color="primary">
                 Search
               </Button>
             </AppBar>
