@@ -41,7 +41,6 @@ const Home = () => {
   const searchPost = () => {
     if (search.trim() || tags.length > 0) {
       navigate(`search?searchQuery=${search || 'none'}&tags=${tags}`);
-      console.log(searchResults.data);
     } else {
       navigate('/');
     }
@@ -73,10 +72,10 @@ const Home = () => {
           }}
         >
           <Grid item xs={12} sm={6} md={9}>
-            {/* {searchResults && searchResults.map((result) => (
-              <Travels data={result} setCurrentId={setCurrentId} />
-            ))} */}
-            {/* <Travels setCurrentId={setCurrentId} /> */}
+            <Travels
+              searchResults={searchResults}
+              setCurrentId={setCurrentId}
+            />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
             <AppBar
