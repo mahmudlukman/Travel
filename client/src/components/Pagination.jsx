@@ -12,11 +12,11 @@ const Paginate = ({ page }) => {
   // const { numberOfPages } = useSelector((state) => state.posts);
   // const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   if (page) {
-  //     dispatch(getPosts(page));
-  //   }
-  // }, [dispatch, page]);
+  useEffect(() => {
+    if (page) {
+      refetch(page);
+    }
+  }, [page]);
 
   return (
     <Pagination

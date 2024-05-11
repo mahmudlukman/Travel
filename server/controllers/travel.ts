@@ -27,8 +27,23 @@ export const createTravel = tryCatch(
 
 export const getAllTravels = tryCatch(
   async (req: Request, res: Response, next: NextFunction) => {
-    const travels = await TravelModel.find();
-    res.status(200).json({ success: true, data: travels });
+    const { page } = req.query;
+    const LIMIT = 8;
+    const startIndex = (Number(page) - 1) * LIMIT; // get the starting index of every page
+
+    const total = await TravelModel.countDocuments({});
+    const travels = await TravelModel.find()
+      .sort({ _id: -1 })
+      .limit(LIMIT)
+      .skip(startIndex);
+    res
+      .status(200)
+      .json({
+        success: true,
+        data: travels,
+        currentPage: Number(page),
+        numberOfPages: Math.ceil(total / LIMIT),
+      });
   }
 );
 
