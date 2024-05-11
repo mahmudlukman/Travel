@@ -48,27 +48,10 @@ const Form = ({ currentId, setCurrentId }) => {
     image: null,
   });
 
-  // const editTravelData = travel && travel.data.find((i) => i._id === id);
-  // useEffect(() => {
-  //   if (updateSuccess) {
-  //     toast.success('Travel updated successfully');
-  //   }
-  //   if (updateError) {
-  //     if ('data' in error) {
-  //       const errorMessage = error;
-  //       toast.error(errorMessage.data.message);
-  //     }
-  //   }
-  // }, [updateSuccess, updateError]);
 
   const updateTravelData = currentId
     ? travel.data.find((message) => message._id === currentId)
     : null;
-  // const posts = useSelector((state) =>
-  //   currentId
-  //     ? state.posts.posts.find((message) => message._id === currentId)
-  //     : null
-  // );
 
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];
@@ -88,13 +71,8 @@ const Form = ({ currentId, setCurrentId }) => {
     setTravelData({ title: '', message: '', tags: [], image: null });
   };
 
-  // useEffect(() => {
-  //   if (!updateTravelData?.title) clear();
-  //   if (updateTravelData) setTravelData(updateTravelData);
-  // }, [updateTravelData]);
   useEffect(() => {
     if (updateTravelData) {
-      // Set all fields including the image when editing
       setTravelData({
         title: updateTravelData.title,
         message: updateTravelData.message,

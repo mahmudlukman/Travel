@@ -29,9 +29,8 @@ const Travel = ({ travel, setCurrentId }) => {
   const { user } = useSelector((state) => state.auth);
   const [deleteTravel, { isSuccess, error }] = useDeleteTravelMutation();
   const [likeTravel] = useLikeTravelMutation();
-  const { data, refetch } = useGetTravelsQuery();
+  const { refetch } = useGetTravelsQuery();
   const [likes, setLikes] = useState(travel?.likes);
-  console.log(data)
 
   const hasLikedPost = travel.likes.find((like) => like === user._id);
 
