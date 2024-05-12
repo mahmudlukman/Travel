@@ -9,20 +9,25 @@ import {
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import CommentSection from './CommentSection';
+import { useGetTravelQuery } from '../../redux/features/travel/travelApi';
 
 const Post = () => {
   const theme = useTheme();
+  const { id } = useParams();
+  const { data: travel, isLoading, isError, refetch } = useGetTravelQuery(id);
+  const navigate = useNavigate();
   // const { post, posts, isLoading } = useSelector((state) => state.posts);
   // const dispatch = useDispatch();
   // const history = useHistory();
   // const classes = useStyles();
-  // const { id } = useParams();
 
-  // useEffect(() => {
-  //   dispatch(getPost(id));
-  // }, [id]);
+  useEffect(() => {
+    refetch(id);
+  }, [id]);
+
+  console.log(travel);
 
   // useEffect(() => {
   //   if (post) {
@@ -34,13 +39,23 @@ const Post = () => {
 
   // const openPost = (_id) => history.push(`/posts/${_id}`);
 
-  // if (isLoading) {
-  //   return (
-  //     <Paper elevation={6} className={classes.loadingPaper}>
-  //       <CircularProgress size="7em" />
-  //     </Paper>
-  //   );
-  // }
+  if (isLoading) {
+    return (
+      <Paper
+        elevation={6}
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          padding: '20px',
+          borderRadius: '15px',
+          height: '39vh',
+        }}
+      >
+        <CircularProgress size="7em" />
+      </Paper>
+    );
+  }
 
   // const recommendedPosts = posts.filter(({ _id }) => _id !== post._id);
 
@@ -58,7 +73,7 @@ const Post = () => {
       >
         <Box sx={{ borderRadius: '20px', margin: '10px', flex: 1 }}>
           <Typography variant="h3" component="h2">
-            post.title
+            {travel?.data?.title}
           </Typography>
           <Typography
             gutterBottom
@@ -66,30 +81,29 @@ const Post = () => {
             color="textSecondary"
             component="h2"
           >
-            {/* {post.tags.map((tag) => (
+            {travel?.data?.tags.map((tag) => (
               <Link
                 to={`/tags/${tag}`}
                 style={{ textDecoration: 'none', color: '#3f51b5' }}
               >
                 {` #${tag} `}
               </Link>
-            ))} */}
+            ))}
           </Typography>
           <Typography gutterBottom variant="body1" component="p">
-          Quilted image lists emphasize certain items over others in a collection. They create hierarchy using varied container sizes and ratios.
+            {travel?.data?.message}
           </Typography>
           <Typography variant="h6">
-            Created by:
+            Created by:{' '}
             <Link
               to={`/creators/`}
               style={{ textDecoration: 'none', color: '#3f51b5' }}
             >
-              post.name
+              {travel?.data?.name}
             </Link>
           </Typography>
           <Typography variant="body1">
-            1 hour ago
-            {/* {moment(post.createdAt).fromNow()} */}
+            {moment(travel?.data?.createdAt).fromNow()}
           </Typography>
           <Divider style={{ margin: '20px 0' }} />
           <Typography variant="body1">
@@ -116,6 +130,7 @@ const Post = () => {
               maxHeight: '600px',
             }}
             src={
+              travel?.data?.image.url ||
               'https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png'
             }
             alt="post.title"
@@ -150,9 +165,14 @@ const Post = () => {
               message
             </Typography>
             <Typography gutterBottom variant="subtitle1">
-              Likes: 
+              Likes:
             </Typography>
-            <img src={'https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png'} width="200px" />
+            <img
+              src={
+                'https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png'
+              }
+              width="200px"
+            />
           </Box>
         </Box>
       </Box>

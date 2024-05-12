@@ -24,6 +24,7 @@ import {
   useLikeTravelMutation,
 } from '../../../redux/features/travel/travelApi';
 import { toast } from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 const Travel = ({ travel, setCurrentId }) => {
   const { user } = useSelector((state) => state.auth);
@@ -31,6 +32,7 @@ const Travel = ({ travel, setCurrentId }) => {
   const [likeTravel] = useLikeTravelMutation();
   const { refetch } = useGetTravelsQuery();
   const [likes, setLikes] = useState(travel?.likes);
+  const navigate = useNavigate();
 
   const hasLikedPost = travel.likes.find((like) => like === user._id);
 
@@ -71,11 +73,11 @@ const Travel = ({ travel, setCurrentId }) => {
     );
   };
 
-  // const openPost = (e) => {
-  //   // dispatch(getPost(post._id, history));
+  const openTravel = (e) => {
+    // dispatch(getPost(post._id, history));
 
-  //   history.push(`/posts/${post._id}`);
-  // };
+    navigate(`/travels/${travel._id}`);
+  };
 
   const handleDelete = async (e) => {
     await deleteTravel(travel._id);
@@ -100,6 +102,7 @@ const Travel = ({ travel, setCurrentId }) => {
         component="span"
         name="test"
         sx={{ display: 'block', textAlign: 'initial' }}
+        onClick={openTravel}
       >
         <CardMedia
           sx={{
