@@ -1,15 +1,23 @@
 // export default Travels;
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Grid, CircularProgress, Typography } from '@mui/material';
 import Travel from './Travel/Travel';
 import { useGetTravelsQuery } from '../../redux/features/travel/travelApi';
 
 const Travels = ({ setCurrentId, searchResults, page }) => {
-  const { data, isLoading, refetch  } = useGetTravelsQuery(page);
+  const [loading, setLoading] = useState(false);
+  const { data, isLoading, refetch } = useGetTravelsQuery(page);
 
   useEffect(() => {
     if (page) {
-      refetch(page);
+      setLoading(true); // Set loading state when fetching data
+      refetch(page)
+        .unwrap() // Unwrap the promise to handle loading state
+        .then(() => setLoading(false)) // Turn off loading state when data fetched
+        .catch((error) => {
+          console.error('Error fetching data:', error);
+          setLoading(false); // Turn off loading state if there's an error
+        });
     }
   }, [page, refetch]);
 
@@ -18,7 +26,7 @@ const Travels = ({ setCurrentId, searchResults, page }) => {
 
   const travels = searchResultData.length > 0 ? searchResultData : defaultData;
 
-  if (isLoading) {
+  if (isLoading || loading) {
     return <CircularProgress />;
   } else if (!travels || travels.length === 0) {
     return <Typography>No travels</Typography>;
