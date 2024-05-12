@@ -6,38 +6,40 @@ import {
   Divider,
   useTheme,
   Box,
+  Card,
+  CardMedia,
+  CardContent,
 } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import CommentSection from './CommentSection';
-import { useGetTravelQuery } from '../../redux/features/travel/travelApi';
+import {
+  useGetTravelQuery,
+  useGetTravelBySearchQuery,
+  useGetTravelsQuery,
+} from '../../redux/features/travel/travelApi';
 
 const Post = () => {
   const theme = useTheme();
   const { id } = useParams();
   const { data: travel, isLoading, isError, refetch } = useGetTravelQuery(id);
+  const { refetch: refetchSearch } = useGetTravelBySearchQuery();
+  const { data: travels } = useGetTravelsQuery();
   const navigate = useNavigate();
-  // const { post, posts, isLoading } = useSelector((state) => state.posts);
-  // const dispatch = useDispatch();
-  // const history = useHistory();
-  // const classes = useStyles();
 
   useEffect(() => {
     refetch(id);
   }, [id]);
 
-  console.log(travel);
+  useEffect(() => {
+    if (travel) {
+      refetchSearch({ search: 'none', tags: travel?.data?.tags.join(',') });
+    }
+  }, [travel, refetchSearch]);
 
-  // useEffect(() => {
-  //   if (post) {
-  //     dispatch(getPostsBySearch({ search: 'none', tags: post?.tags.join(',') }));
-  //   }
-  // }, [post]);
+  if (!travel) return null;
 
-  // if (!post) return null;
-
-  // const openPost = (_id) => history.push(`/posts/${_id}`);
+  const openPost = (_id) => navigate(`/travels/${_id}`);
 
   if (isLoading) {
     return (
@@ -57,7 +59,16 @@ const Post = () => {
     );
   }
 
-  // const recommendedPosts = posts.filter(({ _id }) => _id !== post._id);
+  // const recommendedPosts = travels?.data?.filter(
+  //   ( _id ) => _id !== travel._id
+  // );
+  // Filter recommended posts based on similar tags and exclude current post
+  const recommendedPosts = travels?.data?.filter((post) => {
+    const isSimilarTag = post.tags.some((tag) =>
+      travel.data.tags.includes(tag)
+    );
+    return post._id !== id && isSimilarTag;
+  });
 
   return (
     <Paper style={{ padding: '20px', borderRadius: '15px' }} elevation={6}>
@@ -137,45 +148,137 @@ const Post = () => {
           />
         </Box>
       </Box>
-      <Box sx={{ borderRadius: '20px', margin: '10px', flex: 1 }}>
-        <Typography gutterBottom variant="h5">
-          You might also like:
-        </Typography>
-        <Divider />
-        <Box
-          sx={{
-            display: 'flex',
-            [theme.breakpoints.down('sm')]: {
-              flexDirection: 'column',
-            },
-          }}
-        >
+      {!!recommendedPosts.length && (
+        <Box sx={{ borderRadius: '20px', margin: '10px', flex: 1 }}>
+          <Typography gutterBottom variant="h5">
+            You might also like:
+          </Typography>
+          <Divider />
           <Box
-            style={{ margin: '20px', cursor: 'pointer' }}
-            onClick={() => {}}
-            // key={_id}
+            sx={{
+              display: 'flex',
+              [theme.breakpoints.down('sm')]: {
+                flexDirection: 'column',
+              },
+            }}
           >
-            <Typography gutterBottom variant="h6">
-              title
-            </Typography>
-            <Typography gutterBottom variant="subtitle2">
-              name
-            </Typography>
-            <Typography gutterBottom variant="subtitle2">
-              message
-            </Typography>
-            <Typography gutterBottom variant="subtitle1">
-              Likes:
-            </Typography>
-            <img
-              src={
-                'https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png'
-              }
-              width="200px"
-            />
+            {recommendedPosts.map(
+              ({ title, name, message, likes, image, _id }, index) => (
+                // <Card
+                //   style={{ margin: '20px', cursor: 'pointer' }}
+                //   onClick={() => openPost(_id)}
+                //   key={_id || index}
+                // >
+                //   <CardContent
+                //     sx={{
+                //       borderRadius: '15px',
+                //       height: '100%',
+                //       position: 'relative',
+                //       padding: '20px 20px 0 20px',
+                //       // width: '30%'
+                //     }}
+                //   >
+                //     <Typography gutterBottom variant="h6">
+                //       {title}
+                //     </Typography>
+                //     <Typography gutterBottom variant="subtitle2">
+                //       {name}
+                //     </Typography>
+                //     <Typography gutterBottom variant="subtitle2">
+                //       {message.split(' ').splice(0, 20).join(' ')}...
+                //     </Typography>
+                //     <Typography gutterBottom variant="subtitle1">
+                //       Likes: {likes.length}
+                //     </Typography>
+                //     <CardMedia>
+                //       <img
+                //         src={
+                //           image.url ||
+                //           'https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png'
+                //         }
+                //         width="100%"
+                //       />
+                //     </CardMedia>
+                //   </CardContent>
+                // </Card>
+                <Card
+                  onClick={() => openPost(_id)}
+                  key={_id || index}
+                  sx={{
+                    display: 'flex',
+                    width: '30%',
+                    margin: '10px 0',
+                    cursor: 'pointer',
+                    [theme.breakpoints.down('sm')]: {
+                      display: 'block',
+                      margin: '20px 0',
+                      width: '100%',
+                      justifyContent: 'center',
+                    },
+                  }}
+                >
+                  <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                    <CardContent
+                      sx={{
+                        flex: '1 0 auto',
+                        [theme.breakpoints.down('sm')]: {
+                          flex: 'auto',
+                        },
+                      }}
+                    >
+                      <Typography component="div" variant="h5">
+                        {title}
+                      </Typography>
+                      <Typography
+                        variant="subtitle1"
+                        color="text.secondary"
+                        component="div"
+                      >
+                        {name}
+                      </Typography>
+                    </CardContent>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        pl: 1,
+                        pb: 1,
+                      }}
+                    >
+                      <Typography
+                        component="div"
+                        variant="p"
+                        sx={{ padding: '10px' }}
+                      >
+                        {message.split(' ').splice(0, 20).join(' ')}...
+                      </Typography>
+                    </Box>
+                    <Typography
+                        variant="subtitle1"
+                        color="text.secondary"
+                        component="div"
+                        sx={{ padding: '5px 20px' }}
+                      >
+                        Likes: {likes.length}
+                      </Typography>
+                  </Box>
+                  <CardMedia
+                    component="img"
+                    sx={{ width: 151, [theme.breakpoints.down('sm')]: {
+                      width: '100%',
+                    }, }}
+                    image={
+                      image.url ||
+                      'https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png'
+                    }
+                    alt="Live from space album cover"
+                  />
+                </Card>
+              )
+            )}
           </Box>
         </Box>
-      </Box>
+      )}
     </Paper>
   );
 };

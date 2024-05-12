@@ -27,8 +27,8 @@ export const travelApi = apiSlice.injectEndpoints({
     }),
     getTravelBySearch: builder.query({
       query: (searchQuery) => ({
-        url: `search?searchQuery=${searchQuery.search || 'none'}&tags=${
-          searchQuery.tags
+        url: `search?searchQuery=${searchQuery?.search || 'none'}&tags=${
+          searchQuery?.tags
         }`,
         method: 'GET',
         credentials: 'include',
