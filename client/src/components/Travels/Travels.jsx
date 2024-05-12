@@ -1,11 +1,17 @@
 // export default Travels;
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Grid, CircularProgress, Typography } from '@mui/material';
 import Travel from './Travel/Travel';
 import { useGetTravelsQuery } from '../../redux/features/travel/travelApi';
 
-const Travels = ({ setCurrentId, searchResults }) => {
-  const { data, isLoading } = useGetTravelsQuery();
+const Travels = ({ setCurrentId, searchResults, page }) => {
+  const { data, isLoading, refetch  } = useGetTravelsQuery(page);
+
+  useEffect(() => {
+    if (page) {
+      refetch(page);
+    }
+  }, [page, refetch]);
 
   const defaultData = data ? data.data : [];
   const searchResultData = searchResults ? searchResults.data : [];

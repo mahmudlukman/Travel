@@ -5,13 +5,7 @@ import { Link } from 'react-router-dom';
 import { useGetTravelsQuery } from '../redux/features/travel/travelApi';
 
 const Paginate = ({ page }) => {
-  const { data, refetch } = useGetTravelsQuery(page);
-
-  useEffect(() => {
-    if (page) {
-      refetch(page);
-    }
-  }, [page]);
+  const { data } = useGetTravelsQuery(page);
 
   return (
     <Pagination

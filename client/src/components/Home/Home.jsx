@@ -75,6 +75,7 @@ const Home = () => {
             <Travels
               searchResults={searchResults}
               setCurrentId={setCurrentId}
+              page={page}
             />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>

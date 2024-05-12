@@ -12,9 +12,10 @@ export const travelApi = apiSlice.injectEndpoints({
     }),
     getTravels: builder.query({
       query: (page) => ({
-        url: `get-travels?page=${page}`,
+        url: 'get-travels',
         method: 'GET',
         credentials: 'include',
+        params: {page}
       }),
     }),
     getTravel: builder.query({

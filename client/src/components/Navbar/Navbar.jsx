@@ -83,7 +83,7 @@ const Navbar = () => {
               alignItems: 'center',
               [theme.breakpoints.down('sm')]: {
                 width: 'auto',
-                marginTop: 20,
+                marginTop: 4,
                 justifyContent: 'center',
               },
             }}

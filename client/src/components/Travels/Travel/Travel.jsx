@@ -80,7 +80,7 @@ const Travel = ({ travel, setCurrentId }) => {
   const handleDelete = async (e) => {
     await deleteTravel(travel._id);
     refetch();
-    toast.success('Travel deleted successfully');
+    toast.error('Travel deleted successfully');
   };
 
   return (
