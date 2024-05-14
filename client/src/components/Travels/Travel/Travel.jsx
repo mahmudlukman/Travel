@@ -26,11 +26,11 @@ import {
 import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 
-const Travel = ({ travel, setCurrentId }) => {
+const Travel = ({ travel, setCurrentId, page }) => {
   const { user } = useSelector((state) => state.auth);
   const [deleteTravel, { isSuccess, error }] = useDeleteTravelMutation();
   const [likeTravel] = useLikeTravelMutation();
-  const { refetch } = useGetTravelsQuery();
+  const { refetch } = useGetTravelsQuery(page);
   const [likes, setLikes] = useState(travel?.likes);
   const navigate = useNavigate();
 
@@ -74,8 +74,6 @@ const Travel = ({ travel, setCurrentId }) => {
   };
 
   const openTravel = (e) => {
-    // dispatch(getPost(post._id, history));
-
     navigate(`/travels/${travel._id}`);
   };
 

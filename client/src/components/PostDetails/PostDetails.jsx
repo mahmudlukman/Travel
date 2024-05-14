@@ -59,14 +59,11 @@ const Post = () => {
     );
   }
 
-  // const recommendedPosts = travels?.data?.filter(
-  //   ( _id ) => _id !== travel._id
-  // );
-  // Filter recommended posts based on similar tags and exclude current post
   const recommendedPosts = travels?.data?.filter((post) => {
     const isSimilarTag = post.tags.some((tag) =>
       travel.data.tags.includes(tag)
     );
+
     return post._id !== id && isSimilarTag;
   });
 
@@ -163,51 +160,14 @@ const Post = () => {
             }}
           >
             {recommendedPosts.map(
-              ({ title, name, message, likes, image, _id }, index) => (
-                // <Card
-                //   style={{ margin: '20px', cursor: 'pointer' }}
-                //   onClick={() => openPost(_id)}
-                //   key={_id || index}
-                // >
-                //   <CardContent
-                //     sx={{
-                //       borderRadius: '15px',
-                //       height: '100%',
-                //       position: 'relative',
-                //       padding: '20px 20px 0 20px',
-                //       // width: '30%'
-                //     }}
-                //   >
-                //     <Typography gutterBottom variant="h6">
-                //       {title}
-                //     </Typography>
-                //     <Typography gutterBottom variant="subtitle2">
-                //       {name}
-                //     </Typography>
-                //     <Typography gutterBottom variant="subtitle2">
-                //       {message.split(' ').splice(0, 20).join(' ')}...
-                //     </Typography>
-                //     <Typography gutterBottom variant="subtitle1">
-                //       Likes: {likes.length}
-                //     </Typography>
-                //     <CardMedia>
-                //       <img
-                //         src={
-                //           image.url ||
-                //           'https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png'
-                //         }
-                //         width="100%"
-                //       />
-                //     </CardMedia>
-                //   </CardContent>
-                // </Card>
+              ({ title, name, message, likes, image, _id }) => (
                 <Card
                   onClick={() => openPost(_id)}
-                  key={_id || index}
+                  key={_id}
                   sx={{
                     display: 'flex',
                     width: '30%',
-                    margin: '10px 0',
+                    margin: '10px 10px',
                     cursor: 'pointer',
                     [theme.breakpoints.down('sm')]: {
                       display: 'block',
@@ -254,19 +214,22 @@ const Post = () => {
                       </Typography>
                     </Box>
                     <Typography
-                        variant="subtitle1"
-                        color="text.secondary"
-                        component="div"
-                        sx={{ padding: '5px 20px' }}
-                      >
-                        Likes: {likes.length}
-                      </Typography>
+                      variant="subtitle1"
+                      color="text.secondary"
+                      component="div"
+                      sx={{ padding: '5px 20px' }}
+                    >
+                      Likes: {likes.length}
+                    </Typography>
                   </Box>
                   <CardMedia
                     component="img"
-                    sx={{ width: 151, [theme.breakpoints.down('sm')]: {
-                      width: '100%',
-                    }, }}
+                    sx={{
+                      width: 151,
+                      [theme.breakpoints.down('sm')]: {
+                        width: '100%',
+                      },
+                    }}
                     image={
                       image.url ||
                       'https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png'

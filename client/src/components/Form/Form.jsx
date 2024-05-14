@@ -31,10 +31,10 @@ const VisuallyHiddenInput = styled('input')({
   width: 1,
 });
 
-const Form = ({ currentId, setCurrentId }) => {
+const Form = ({ currentId, setCurrentId, page }) => {
   const theme = useTheme();
   const { user } = useSelector((state) => state.auth);
-  const { data: travel, refetch } = useGetTravelsQuery();
+  const { data: travel, refetch } = useGetTravelsQuery(page);
   const [createTravel, { isLoading, isSuccess, error }] =
     useCreateTravelMutation();
   const [

@@ -37,11 +37,11 @@ const CommentSection = ({ post }) => {
         <Typography gutterBottom variant="h6">
           Write a comment
         </Typography>
-        <TextField fullWidth rows={4} variant="outlined" label="Comment" />
+        <TextField sx={{width: '100%'}} rows={4} variant="outlined" label="Comment" />
         <br />
         <Button
           style={{ marginTop: '10px' }}
-          fullWidthcolor="primary"
+          color="primary"
           variant="contained"
         >
           Comment

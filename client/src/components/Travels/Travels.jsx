@@ -36,7 +36,7 @@ const Travels = ({ setCurrentId, searchResults, page }) => {
     <Grid container spacing={3}>
       {travels.map((travel) => (
         <Grid key={travel._id} item xs={12} sm={6} md={4} lg={3}>
-          <Travel travel={travel} setCurrentId={setCurrentId} />
+          <Travel travel={travel} setCurrentId={setCurrentId} page={page} />
         </Grid>
       ))}
     </Grid>

@@ -110,7 +110,7 @@ const Home = () => {
                 Search
               </Button>
             </AppBar>
-            <Form currentId={currentId} setCurrentId={setCurrentId} />
+            <Form currentId={currentId} setCurrentId={setCurrentId} page={page}/>
             <Paper
               sx={{ borderRadius: 4, marginTop: '1rem', padding: '16px' }}
               elevation={6}
