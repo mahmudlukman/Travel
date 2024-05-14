@@ -9,17 +9,16 @@ import {
   Box,
 } from '@mui/material';
 import { deepPurple } from '@mui/material/colors';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useLogoutQuery } from '../../redux/features/auth/authApi';
 
 import travelsLogo from '../../assets/travelsLogo.png';
-import memoriesText from '../../assets/memoriesText.png';
+import travelsText from '../../assets/travelsText.png';
 import { useGetTravelsQuery } from '../../redux/features/travel/travelApi';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 const Navbar = () => {
   const theme = useTheme();
-  const navigate = useNavigate();
   const [logout, setLogout] = useState(false);
   const { user } = useSelector((state) => state.auth);
   const { refetch } = useGetTravelsQuery();
@@ -53,13 +52,13 @@ const Navbar = () => {
         <img
           component={Link}
           to="/"
-          src={travelsLogo}
+          src={travelsText}
           alt="icon"
           height="45px"
         />
         <img
           style={{ marginLeft: '10px', marginTop: '5px' }}
-          src={memoriesText}
+          src={travelsLogo}
           alt="icon"
           height="40px"
         />

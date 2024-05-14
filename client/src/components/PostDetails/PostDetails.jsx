@@ -29,13 +29,8 @@ const Post = () => {
 
   useEffect(() => {
     refetch(id);
-  }, [id]);
-
-  useEffect(() => {
-    if (travel) {
-      refetchSearch({ search: 'none', tags: travel?.data?.tags.join(',') });
-    }
-  }, [travel, refetchSearch]);
+    refetchSearch({ search: 'none', tags: travel?.data?.tags.join(',') });
+  }, [id, travel, refetch, refetchSearch]);
 
   if (!travel) return null;
 
