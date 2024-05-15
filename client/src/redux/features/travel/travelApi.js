@@ -15,7 +15,7 @@ export const travelApi = apiSlice.injectEndpoints({
         url: 'get-travels',
         method: 'GET',
         credentials: 'include',
-        params: {page}
+        params: { page },
       }),
     }),
     getTravel: builder.query({
@@ -63,6 +63,14 @@ export const travelApi = apiSlice.injectEndpoints({
         credentials: 'include',
       }),
     }),
+    commentTravel: builder.mutation({
+      query: ({value, id}) => ({
+        url: `comment/${id}`,
+        method: 'POST',
+        body: value,
+        credentials: 'include',
+      }),
+    }),
   }),
 });
 
@@ -75,4 +83,5 @@ export const {
   useGetTravelsByCreatorQuery,
   useUpdateTravelMutation,
   useLikeTravelMutation,
+  useCommentTravelMutation,
 } = travelApi;
