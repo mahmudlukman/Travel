@@ -206,24 +206,25 @@ export const likeTravel = tryCatch(
     res.status(200).json({ success: true, data: updatedTravel });
   }
 );
-// export const commentTravel = tryCatch(
-//   async (req: Request, res: Response, next: NextFunction) => {
-//     const travelId = req.params.id;
-//     const data = req.body;
 
-//     const travel = (await TravelModel.findById(travelId)) as any;
+export const commentTravel = tryCatch(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const travelId = req.params.id;
+    const {value} = req.body;
 
-//     travel?.comments.push(data);
+    const travel = await TravelModel.findById(travelId) as any;
 
-//     const updatedTravel = await TravelModel.findByIdAndUpdate(
-//       travelId,
-//       travel,
-//       { new: true }
-//     );
+    travel?.comments.push(value);
 
-//     res.status(200).json({ success: true, data: updatedTravel });
-//   }
-// );
+    const updatedTravel = await TravelModel.findByIdAndUpdate(
+      travelId,
+      travel,
+      { new: true }
+    );
+
+    res.status(200).json({ success: true, data: updatedTravel });
+  }
+);
 
 // export const commentTravel = tryCatch(
 //   async (req: Request, res: Response, next: NextFunction) => {

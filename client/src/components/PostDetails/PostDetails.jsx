@@ -113,7 +113,7 @@ const Post = () => {
             <strong>Realtime Chat - coming soon!</strong>
           </Typography>
           <Divider style={{ margin: '20px 0' }} />
-          <CommentSection />
+          <CommentSection travel={travel} />
           <Divider style={{ margin: '20px 0' }} />
         </Box>
         <Box

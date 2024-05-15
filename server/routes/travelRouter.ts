@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import {
+  commentTravel,
   createTravel,
   deleteTravel,
   getAllTravels,
@@ -21,5 +22,6 @@ travelRouter.get('/creator', getTravelsByCreator);
 travelRouter.put('/update/:id', isAuthenticated, updateTravel);
 travelRouter.delete('/delete/:id', isAuthenticated, deleteTravel);
 travelRouter.put('/like/:id', isAuthenticated, likeTravel);
+travelRouter.post('/comment/:id', isAuthenticated, commentTravel);
 
 export default travelRouter;
