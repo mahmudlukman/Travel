@@ -10,13 +10,13 @@ const Travels = ({ setCurrentId, searchResults, page }) => {
 
   useEffect(() => {
     if (page) {
-      setLoading(true); // Set loading state when fetching data
+      setLoading(true);
       refetch(page)
-        .unwrap() // Unwrap the promise to handle loading state
-        .then(() => setLoading(false)) // Turn off loading state when data fetched
+        .unwrap()
+        .then(() => setLoading(false))
         .catch((error) => {
           console.error('Error fetching data:', error);
-          setLoading(false); // Turn off loading state if there's an error
+          setLoading(false);
         });
     }
   }, [page, refetch]);

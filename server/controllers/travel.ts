@@ -76,24 +76,6 @@ export const getTravelsBySearch = tryCatch(
   }
 );
 
-// export const getTravelsByUser = tryCatch(
-//   async (req: Request, res: Response, next: NextFunction) => {
-//     const userTravelList = req.user?.travels;
-//     const travelId = req.params.id;
-
-//     const travelExists = userTravelList?.find(
-//       (travel: any) => travel._id.toString() === travelId
-//     );
-
-//     if (!travelExists) {
-//       return next(
-//         new ErrorHandler('You are not eligible to access this course', 404)
-//       );
-//     }
-//     const travel = await TravelModel.findById(travelId)
-//     res.status(200).json({ success: true, data: travel });
-//   }
-// );
 export const getTravelsByCreator = tryCatch(
   async (req: Request, res: Response, next: NextFunction) => {
     const { name } = req.query.creator as any;
