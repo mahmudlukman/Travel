@@ -64,10 +64,10 @@ export const travelApi = apiSlice.injectEndpoints({
       }),
     }),
     commentTravel: builder.mutation({
-      query: ({value, id}) => ({
+      query: ({id, value}) => ({
         url: `comment/${id}`,
         method: 'POST',
-        body: value,
+        body: {value},
         credentials: 'include',
       }),
     }),

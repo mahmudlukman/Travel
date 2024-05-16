@@ -36,14 +36,12 @@ export const getAllTravels = tryCatch(
       .sort({ _id: -1 })
       .limit(LIMIT)
       .skip(startIndex);
-    res
-      .status(200)
-      .json({
-        success: true,
-        data: travels,
-        currentPage: Number(page),
-        numberOfPages: Math.ceil(total / LIMIT),
-      });
+    res.status(200).json({
+      success: true,
+      data: travels,
+      currentPage: Number(page),
+      numberOfPages: Math.ceil(total / LIMIT),
+    });
   }
 );
 
@@ -210,84 +208,18 @@ export const likeTravel = tryCatch(
 export const commentTravel = tryCatch(
   async (req: Request, res: Response, next: NextFunction) => {
     const travelId = req.params.id;
-    const {value} = req.body;
+    const { value } = req.body;
 
-    const travel = await TravelModel.findById(travelId) as any;
+    const travel = await TravelModel.findById(travelId);
 
-    travel?.comments.push(value);
+    if (!travel) {
+      return next(new ErrorHandler('Travel not found', 404));
+    }
 
-    const updatedTravel = await TravelModel.findByIdAndUpdate(
-      travelId,
-      travel,
-      { new: true }
-    );
+    travel.comments.push(value);
+
+    const updatedTravel = await travel.save();
 
     res.status(200).json({ success: true, data: updatedTravel });
   }
 );
-
-// export const commentTravel = tryCatch(
-//   async (req: Request, res: Response, next: NextFunction) => {
-//     const travelId = req.params.id;
-//     const { value } = req.body; // Assuming you have a 'text' field in the comment data
-//     const userId = req.user?.id; // Assuming you have a user ID available in req.user
-
-//     // Create a new comment object
-//     const newComment = {
-//       value,
-//       user: userId,
-//       createdAt: new Date(),
-//     };
-//     const travel = await TravelModel.findById(travelId);
-
-//     // If travel not found
-//     if (!travel) {
-//       return next(new ErrorHandler('Travel not found', 500));
-//     }
-
-//     // Push the new comment to the comments array
-//     travel.comments.push(newComment);
-
-//     // Save the updated travel document
-//     const updatedTravel = await travel.save();
-
-//     res.status(200).json({ success: true, data: updatedTravel });
-//   }
-// );
-
-// export const commentTravel = tryCatch(
-//   async (req: Request, res: Response, next: NextFunction) => {
-//     const travelId = req.params.id;
-//     const { value } = req.body; // Assuming you have a 'text' field in the comment data
-//     const userId = req.user?.id; // Assuming you have a user ID available in req.user
-
-//     // Create a new comment object
-//     const newComment = {
-//       value,
-//       user: userId,
-//       createdAt: new Date(),
-//     };
-
-//     try {
-//       const travel = await TravelModel.findById(travelId);
-
-//       // If travel not found
-//       if (!travel) {
-//         return res.status(404).json({
-//           success: false,
-//           message: 'Travel not found',
-//         });
-//       }
-
-//       // Push the new comment to the comments array
-//       travel.comments.push(newComment);
-
-//       // Save the updated travel document
-//       const updatedTravel = await travel.save();
-
-//       res.status(200).json({ success: true, data: updatedTravel });
-//     } catch (error) {
-//       next(error); // Pass the error to the next middleware (error handling middleware)
-//     }
-//   }
-// );

@@ -113,7 +113,7 @@ const Post = () => {
             <strong>Realtime Chat - coming soon!</strong>
           </Typography>
           <Divider style={{ margin: '20px 0' }} />
-          <CommentSection travel={travel} />
+          <CommentSection travel={travel.data} />
           <Divider style={{ margin: '20px 0' }} />
         </Box>
         <Box
@@ -157,8 +157,8 @@ const Post = () => {
             {recommendedPosts.map(
               ({ title, name, message, likes, image, _id }) => (
                 <Card
-                  onClick={() => openPost(_id)}
                   key={_id}
+                  onClick={() => openPost(_id)}
                   sx={{
                     display: 'flex',
                     width: '30%',
@@ -171,6 +171,7 @@ const Post = () => {
                       justifyContent: 'center',
                     },
                   }}
+                  
                 >
                   <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                     <CardContent

@@ -1,23 +1,36 @@
 import React, { useState, useRef } from 'react';
 import { Typography, TextField, Button, Box } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
-import {useCommentTravelMutation} from '../../redux/features/travel/travelApi'
+import { useSelector } from 'react-redux';
+import { useCommentTravelMutation, useGetTravelQuery } from '../../redux/features/travel/travelApi';
+import { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { toast } from 'react-hot-toast';
 
 const CommentSection = ({ travel }) => {
   const { user } = useSelector((state) => state.auth);
   const [comment, setComment] = useState('');
-  // const [comments, setComments] = useState([1, 2, 3, 4]);
-  const [commentTravel, { isLoading, isSuccess, error }] = useCommentTravelMutation()
-  const [comments, setComments] = useState(travel?.comments);
+  const [commentTravel, { isLoading, isSuccess, error }] =
+    useCommentTravelMutation();
+    const { id } = useParams();
+  const { data, refetch } = useGetTravelQuery(id);
+  const [comments, setComments] = useState(travel?.comments ?? []);
   const commentsRef = useRef();
 
+  useEffect(() => {
+    setComments(travel?.comments ?? []);
+  }, [travel]);
+
   const handleComment = async () => {
-    const newComments = await commentTravel(`${user?.name}: ${comment}`, travel._id);
+    const newComments = await commentTravel({
+      value: `${user?.name}: ${comment}`,
+      id: travel._id,
+    });
 
     setComment('');
     setComments(newComments);
-
     commentsRef.current.scrollIntoView({ behavior: 'smooth' });
+    refetch(id)
+    toast.success('Comment Submitted successfully');
   };
 
   return (
@@ -27,40 +40,42 @@ const CommentSection = ({ travel }) => {
           <Typography gutterBottom variant="h6">
             Comments
           </Typography>
-          {comments?.map((c, i) => (
+          {Array.isArray(comments) && comments?.map((c, i) => (
             <Typography key={i} gutterBottom variant="subtitle1">
-              {/* <strong>{c.split(': ')[0]}</strong>
-              {c.split(':')[1]} */}
-              Comment {i}
+              <strong>{c.split(': ')[0]}</strong>
+              {c.split(':')[1]}
+              {/* Comment {i} */}
             </Typography>
           ))}
-          {/* <div ref={commentsRef} /> */}
+          <div ref={commentsRef} />
         </Box>
       </Box>
-      <Box sx={{ width: '70%' }}>
-        <Typography gutterBottom variant="h6">
-          Write a comment
-        </Typography>
-        <TextField
-          sx={{ width: '100%' }}
-          rows={4}
-          variant="outlined"
-          label="Comment"
-          multiline
-          value={comment}
-          onChange={(e) => setComment(e.target.value)}
-        />
-        <br />
-        <Button
-          style={{ marginTop: '10px', width: '100%' }}
-          color="primary"
-          variant="contained"
-          disabled={!comment.length}
-          onClick={handleComment}
-        >
-          Comment
-        </Button>
-      </Box>
+      {user?.name && (
+        <Box sx={{ width: '70%' }}>
+          <Typography gutterBottom variant="h6">
+            Write a comment
+          </Typography>
+          <TextField
+            sx={{ width: '100%' }}
+            rows={4}
+            variant="outlined"
+            label="Comment"
+            multiline
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+          />
+          <br />
+          <Button
+            style={{ marginTop: '10px', width: '100%' }}
+            color="primary"
+            variant="contained"
+            disabled={!comment.length}
+            onClick={handleComment}
+          >
+            Comment
+          </Button>
+        </Box>
+      )}
     </Box>
   );
 };
