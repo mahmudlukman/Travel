@@ -14,11 +14,12 @@ const userRouter_1 = __importDefault(require("./routes/userRouter"));
 const travelRouter_1 = __importDefault(require("./routes/travelRouter"));
 // body parser
 exports.app.use(express_1.default.json({ limit: '50mb' }));
+exports.app.disable('x-powered-by');
 // cookie parser
 exports.app.use((0, cookie_parser_1.default)());
 // cors => Cross Origin Resource Sharing
 exports.app.use((0, cors_1.default)({
-    origin: ['http://localhost:5173'],
+    origin: ["https://travel-1-e0q2.onrender.com"],
     credentials: true,
 }));
 // routes

@@ -17,23 +17,10 @@ app.use(cookieParser());
 // cors => Cross Origin Resource Sharing
 app.use(
   cors({
-    origin: process.env.ORIGIN,
+    origin: ["https://travel-1-e0q2.onrender.com"],
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-    allowedHeaders: ['X-Requested-With', 'Content-Type', 'Authorization'],
-    optionsSuccessStatus: 200,
   })
 );
-
-// Additional CORS headers to make sure they are set correctly
-app.use((req: Request, res: Response, next: NextFunction) => {
-  res.setHeader('Access-Control-Allow-Origin', process.env.ORIGIN as string);
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
-  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Authorization');
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  next();
-});
-
 
 // routes
 app.use('/api/v1', userRouter);
