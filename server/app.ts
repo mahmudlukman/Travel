@@ -14,13 +14,7 @@ app.use(express.json({ limit: '50mb' }));
 app.use(cookieParser());
 
 // cors => Cross Origin Resource Sharing
-app.use(
-  cors({
-    // origin: ['http://localhost:5173'],
-    origin: ['https://tapiya.netlify.app/'],
-    credentials: true,
-  })
-);
+app.use(cors());
 
 // routes
 app.use('/api/v1', userRouter);
