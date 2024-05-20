@@ -14,15 +14,22 @@ app.use(express.json({ limit: '50mb' }));
 app.use(cookieParser());
 
 // cors => Cross Origin Resource Sharing
-app.use(
-  cors({
-    origin: process.env.ORIGIN,
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    optionsSuccessStatus: 200,
-  })
-);
+// app.use(
+//   cors({
+//     origin: process.env.ORIGIN,
+//     credentials: true,
+//     methods: ['GET', 'POST', 'PUT', 'DELETE'],
+//     allowedHeaders: ['Content-Type', 'Authorization'],
+//     optionsSuccessStatus: 200,
+//   })
+// );
+
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', process.env.ORIGIN as any)
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE')
+  res.setHeader('Access-Control-Allow-Headers', 'X-requested-With, Content-Type, Authorization')
+  next()
+})
 
 // routes
 app.use('/api/v1', userRouter);
