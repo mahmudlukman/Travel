@@ -25,11 +25,6 @@ app.use(
   })
 );
 
-app.get('/cors-test', (req: Request, res: Response) => {
-  res.setHeader('Access-Control-Allow-Origin', process.env.ORIGIN as string);
-  res.status(200).json({ success: true, message: 'CORS test passed' });
-});
-
 
 // routes
 app.use('/api/v1', userRouter);
